@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulir Pengajuan Kepegawaian — Dinas PUPR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://script.google.com/macros/s/AKfycbw86UnYx0KKTuqgCG3eRNjccueEr_pg2C-mSDm6UShzCOWLVCaWtz96yOgACk9ZnvQ/exec">
+<style>
+  :root{
+    --navy:#1C3D5A;
+    --navy-deep:#12283D;
+    --paper:#F7F4EC;
+    --paper-dim:#EFEAE0;
+    --card:#FFFFFF;
+    --gold:#B08D2B;
+    --gold-soft:#E8DCB8;
+    --brick:#A23B2E;
+    --green:#3F6B4F;
+    --ink:#20262D;
+    --ink-soft:#5B6570;
+    --line:#DCD5C4;
+    --radius:10px;
+    --serif:"Source Serif 4", Georgia, serif;
+    --sans:"Plus Jakarta Sans", system-ui, sans-serif;
+    --mono:"JetBrains Mono", ui-monospace, monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+
+  /* ===== Masthead ===== */
+  .masthead{
+    background:linear-gradient(180deg,var(--navy) 0%, var(--navy-deep) 100%);
+    color:#F2EFE6;
+    padding:22px 24px 26px;
+    position:relative;
+    overflow:hidden;
+    border-bottom:4px solid var(--gold);
+  }
+  .masthead::after{
+    content:"";
+    position:absolute; inset:0;
+    background-image:radial-gradient(circle at 85% -10%, rgba(184,141,43,.18), transparent 55%);
+    pointer-events:none;
+  }
+  .masthead-inner{
+    max-width:1180px; margin:0 auto;
+    display:flex; align-items:center; gap:16px;
+    position:relative; z-index:1;
+  }
+  .seal{
+    flex:none; width:52px;height:52px;
+  }
+  .masthead-text .eyebrow{
+    font-family:var(--mono);
+    font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--gold-soft); margin:0 0 4px;
+  }
+  .masthead-text h1{
+    font-family:var(--serif); font-weight:700;
+    font-size:22px; margin:0; letter-spacing:.01em;
+  }
+  .masthead-text p{
+    margin:3px 0 0; font-size:13px; color:#C9D2DC;
+  }
+  .masthead-actions{
+    margin-left:auto; display:flex; gap:8px; position:relative; z-index:1;
+  }
+  .btn-ghost{
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.28);
+    color:#F2EFE6;
+    font-family:var(--sans); font-size:12.5px; font-weight:600;
+    padding:9px 14px; border-radius:8px; cursor:pointer;
+    transition:background .15s ease;
+    white-space:nowrap;
+  }
+  .btn-ghost:hover{background:rgba(255,255,255,.16);}
+
+  /* ===== Layout ===== */
+  .layout{
+    max-width:1180px; margin:0 auto;
+    display:grid; grid-template-columns:220px 1fr;
+    gap:28px; padding:28px 24px 90px;
+    align-items:start;
+  }
+  @media (max-width:860px){
+    .layout{grid-template-columns:1fr; padding:16px 14px 90px;}
+  }
+
+  /* ===== Side nav ===== */
+  .side-nav{
+    position:sticky; top:20px;
+    display:flex; flex-direction:column; gap:2px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:10px;
+  }
+  @media (max-width:860px){
+    .side-nav{
+      position:static;
+      flex-direction:row; overflow-x:auto;
+      gap:6px; padding:8px;
+    }
+  }
+  .nav-item{
+    display:flex; align-items:center; gap:9px;
+    padding:9px 10px; border-radius:7px;
+    font-size:13px; font-weight:600; color:var(--ink-soft);
+    text-decoration:none; cursor:pointer;
+    border:1px solid transparent;
+    white-space:nowrap;
+  }
+  .nav-item .dot{
+    flex:none; width:20px; height:20px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--mono); font-size:10.5px; font-weight:600;
+    background:var(--paper-dim); color:var(--ink-soft);
+    border:1px solid var(--line);
+  }
+  .nav-item.active{background:var(--paper-dim); color:var(--navy); border-color:var(--line);}
+  .nav-item.active .dot{background:var(--navy); color:#fff; border-color:var(--navy);}
+  .nav-item.done .dot{background:var(--green); color:#fff; border-color:var(--green);}
+  .nav-item.done .dot::before{content:"✓";}
+  .nav-item.done .dot span{display:none;}
+
+  /* ===== Main column ===== */
+  .main-col{display:flex; flex-direction:column; gap:18px; min-width:0;}
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:22px 24px 24px;
+    position:relative;
+  }
+  .card::before{
+    content:"";
+    position:absolute; left:0; top:16px; bottom:16px; width:3px;
+    background:var(--gold); border-radius:2px;
+  }
+  .card-head{margin-bottom:16px;}
+  .card-head .eyebrow{
+    font-family:var(--mono); font-size:11px; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--gold); margin:0 0 4px; font-weight:600;
+  }
+  .card-head h2{
+    font-family:var(--serif); font-size:19px; margin:0; color:var(--navy-deep);
+  }
+  .card-head p.hint{margin:5px 0 0; font-size:12.5px; color:var(--ink-soft);}
+
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:14px 16px;}
+  .grid.single{grid-template-columns:1fr;}
+  @media (max-width:600px){.grid{grid-template-columns:1fr;}}
+  .field{display:flex; flex-direction:column; gap:6px;}
+  .field label{font-size:12.5px; font-weight:600; color:var(--navy-deep);}
+  .field label .req{color:var(--brick); margin-left:2px;}
+  .field .desc{font-size:11.5px; color:var(--ink-soft); margin-top:-2px;}
+  input[type=text], input[type=tel], input[type=email], input[type=date], select{
+    font-family:var(--sans); font-size:14px; color:var(--ink);
+    padding:10px 11px; border:1px solid var(--line); border-radius:7px;
+    background:#FCFBF8; outline:none; width:100%;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  input:focus, select:focus{border-color:var(--navy); background:#fff;}
+  input.nip{font-family:var(--mono); letter-spacing:.03em;}
+  .field.error input, .field.error select{border-color:var(--brick); background:#FBF1EF;}
+  .field .err-msg{font-size:11.5px; color:var(--brick); display:none;}
+  .field.error .err-msg{display:block;}
+
+  /* radio / choice cards */
+  .choice-group{display:flex; flex-direction:column; gap:8px;}
+  .choice{
+    display:flex; align-items:flex-start; gap:10px;
+    border:1px solid var(--line); border-radius:8px;
+    padding:12px 13px; cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .choice:hover{border-color:var(--gold);}
+  .choice input{margin-top:2px;}
+  .choice.selected{border-color:var(--navy); background:#F1F5F9;}
+  .choice .ctext strong{display:block; font-size:13.5px; color:var(--navy-deep);}
+  .choice .ctext span{font-size:12px; color:var(--ink-soft);}
+
+  /* file upload */
+  .file-drop{
+    border:1.5px dashed var(--line); border-radius:8px;
+    padding:14px; display:flex; align-items:center; gap:12px;
+    background:#FCFBF8; cursor:pointer;
+  }
+  .file-drop:hover{border-color:var(--gold);}
+  .file-drop .ficon{
+    flex:none; width:34px; height:34px; border-radius:7px;
+    background:var(--paper-dim); display:flex; align-items:center; justify-content:center;
+    font-size:15px; color:var(--navy);
+  }
+  .file-drop .ftext{font-size:12.5px; color:var(--ink-soft); min-width:0;}
+  .file-drop .ftext b{display:block; font-size:13px; color:var(--ink); word-break:break-all;}
+  .file-drop input[type=file]{display:none;}
+  .file-ok .ficon{background:var(--green); color:#fff;}
+
+  fieldset{border:none; margin:0; padding:0;}
+
+  .subsection{
+    margin-top:14px; padding-top:14px; border-top:1px dashed var(--line);
+  }
+  .subsection .sub-title{
+    font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--navy); font-weight:600; margin:0 0 12px;
+  }
+
+  .checkbox-line{display:flex; gap:10px; align-items:flex-start;}
+  .checkbox-line input{margin-top:3px; width:16px; height:16px; flex:none;}
+  .checkbox-line label{font-size:13px; color:var(--ink); line-height:1.55;}
+
+  .actions-bar{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:12px; flex-wrap:wrap;
+  }
+  .btn-primary{
+    background:var(--navy); color:#fff; border:none;
+    font-family:var(--sans); font-weight:700; font-size:14px;
+    padding:13px 22px; border-radius:8px; cursor:pointer;
+    transition:background .15s ease;
+  }
+  .btn-primary:hover{background:var(--navy-deep);}
+  .btn-primary:disabled{background:#A9B3BC; cursor:not-allowed;}
+  .btn-text{
+    background:none; border:none; color:var(--ink-soft);
+    font-family:var(--sans); font-size:12.5px; font-weight:600;
+    cursor:pointer; text-decoration:underline; padding:6px 0;
+  }
+  .save-note{font-size:11.5px; color:var(--ink-soft); font-family:var(--mono);}
+
+  .notice{
+    display:flex; gap:10px; align-items:flex-start;
+    background:#FBF1EF; border:1px solid #ECD2CC; color:#7A2C22;
+    border-radius:8px; padding:12px 13px; font-size:12.5px;
+  }
+
+  /* ===== Success / receipt ===== */
+  .receipt-wrap{
+    display:flex; justify-content:center; padding:40px 20px 80px;
+  }
+  .receipt{
+    max-width:520px; width:100%; background:var(--card);
+    border:1px solid var(--line); border-radius:14px;
+    padding:34px 30px; text-align:center; position:relative;
+  }
+  .stamp{width:120px; height:120px; margin:0 auto 14px;}
+  .receipt h2{font-family:var(--serif); color:var(--navy-deep); font-size:22px; margin:0 0 6px;}
+  .receipt p{color:var(--ink-soft); font-size:13.5px; margin:0 0 20px;}
+  .code-box{
+    font-family:var(--mono); font-size:18px; font-weight:600; color:var(--navy);
+    background:var(--paper-dim); border:1px dashed var(--gold);
+    border-radius:8px; padding:12px; letter-spacing:.06em; margin-bottom:18px;
+  }
+  .receipt .sub{font-size:12px; color:var(--ink-soft); text-align:left; background:var(--paper-dim); border-radius:8px; padding:12px 14px; margin-top:6px;}
+
+  /* ===== History drawer ===== */
+  .drawer-backdrop{
+    position:fixed; inset:0; background:rgba(18,40,61,.45);
+    display:none; z-index:40;
+  }
+  .drawer-backdrop.open{display:block;}
+  .drawer{
+    position:fixed; top:0; right:0; height:100%; width:380px; max-width:92vw;
+    background:var(--paper); z-index:41;
+    transform:translateX(100%); transition:transform .25s ease;
+    display:flex; flex-direction:column;
+    border-left:1px solid var(--line);
+  }
+  .drawer.open{transform:translateX(0);}
+  .drawer-head{
+    padding:18px 20px; border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between;
+    background:var(--navy); color:#fff;
+  }
+  .drawer-head h3{font-family:var(--serif); margin:0; font-size:17px;}
+  .drawer-head button{background:none; border:none; color:#fff; font-size:20px; cursor:pointer; line-height:1;}
+  .drawer-body{padding:16px 18px; overflow-y:auto; flex:1;}
+  .hist-item{
+    background:var(--card); border:1px solid var(--line); border-radius:8px;
+    padding:13px 14px; margin-bottom:10px;
+  }
+  .hist-item .htitle{font-weight:700; font-size:13.5px; color:var(--navy-deep);}
+  .hist-item .hmeta{font-size:11.5px; color:var(--ink-soft); margin-top:3px; font-family:var(--mono);}
+  .hist-item .hstatus{
+    display:inline-block; margin-top:8px; font-size:11px; font-weight:700;
+    padding:3px 8px; border-radius:20px; background:#FCF3DC; color:#8A6A10;
+  }
+  .empty-state{font-size:13px; color:var(--ink-soft); text-align:center; padding:30px 10px;}
+
+  .req-star{color:var(--brick);}
+
+  @media print{
+    .side-nav, .masthead-actions, .actions-bar, .btn-ghost{display:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <svg class="seal" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="46" fill="none" stroke="#E8DCB8" stroke-width="2"/>
+      <circle cx="50" cy="50" r="38" fill="none" stroke="#E8DCB8" stroke-width="1"/>
+      <path id="sealTextPath" d="M 50,12 A 38,38 0 1 1 49.9,12" fill="none"/>
+      <text font-family="JetBrains Mono" font-size="6.3" fill="#E8DCB8" letter-spacing="2">
+        <textPath href="#sealTextPath" startOffset="2%">BIDANG KEPEGAWAIAN • DINAS PUPR •</textPath>
+      </text>
+      <path d="M50 34 L54 46 L67 46 L56 54 L60 66 L50 58 L40 66 L44 54 L33 46 L46 46 Z" fill="#E8DCB8"/>
+    </svg>
+    <div class="masthead-text">
+      <p class="eyebrow">Bidang Kepegawaian · Dinas PUPR</p>
+      <h1>Formulir Pengajuan Kenaikan Pangkat &amp; KGB</h1>
+      <p>Isi seluruh bagian di bawah ini. Draf tersimpan otomatis di perangkat Anda.</p>
+    </div>
+    <div class="masthead-actions">
+      <button class="btn-ghost" onclick="openHistory()">Riwayat Saya</button>
+    </div>
+  </div>
+</header>
+
+<div class="layout" id="formLayout">
+  <nav class="side-nav" id="sideNav">
+    <a class="nav-item" href="#bagian1" data-target="bagian1"><span class="dot"><span>1</span></span> Data Diri</a>
+    <a class="nav-item" href="#bagian2" data-target="bagian2"><span class="dot"><span>2</span></span> Data Kepegawaian</a>
+    <a class="nav-item" href="#bagian3" data-target="bagian3"><span class="dot"><span>3</span></span> Jenis Pengajuan</a>
+    <a class="nav-item" href="#bagian4" data-target="bagian4"><span class="dot"><span>4</span></span> Data Khusus</a>
+    <a class="nav-item" href="#bagian5" data-target="bagian5"><span class="dot"><span>5</span></span> Berkas Wajib</a>
+    <a class="nav-item" href="#bagian6" data-target="bagian6"><span class="dot"><span>6</span></span> Pernyataan</a>
+  </nav>
+
+  <form class="main-col" id="mainForm" novalidate>
+
+    <div class="notice" id="topNotice">
+      ⚠️ Formulir ini menyimpan draf dan riwayat pengajuan hanya di penyimpanan pribadi Anda pada perangkat/akun ini — data tidak dibagikan ke pengguna lain. Formulir ini <b>belum terhubung ke Google Sheet</b>; setelah mengirim, unduh bukti pengajuan dan sampaikan ke bagian kepegawaian sesuai prosedur kantor Anda.
+    </div>
+
+    <!-- BAGIAN 1 -->
+    <section class="card" id="bagian1">
+      <div class="card-head">
+        <p class="eyebrow">Bagian 1</p>
+        <h2>Data Diri</h2>
+      </div>
+      <div class="grid">
+        <div class="field" data-field="nama">
+          <label>Nama Lengkap + Gelar <span class="req">*</span></label>
+          <input type="text" id="nama" placeholder="cth. Budi Santoso, S.T., M.T.">
+          <span class="err-msg">Wajib diisi.</span>
+        </div>
+        <div class="field" data-field="email">
+          <label>Email</label>
+          <input type="email" id="email" placeholder="nama@contoh.go.id">
+        </div>
+        <div class="field" data-field="nip18">
+          <label>NIP 18 Digit <span class="req">*</span></label>
+          <input type="text" class="nip" id="nip18" maxlength="18" inputmode="numeric" placeholder="18 digit angka">
+          <span class="err-msg">Harus 18 digit angka.</span>
+        </div>
+        <div class="field" data-field="nip16">
+          <label>NIP Baru 16 Digit <span class="req">*</span></label>
+          <input type="text" class="nip" id="nip16" maxlength="16" inputmode="numeric" placeholder="16 digit angka">
+          <span class="err-msg">Harus 16 digit angka.</span>
+        </div>
+        <div class="field" data-field="hp">
+          <label>No HP / WA Aktif <span class="req">*</span></label>
+          <input type="tel" id="hp" placeholder="08xxxxxxxxxx">
+          <span class="err-msg">Wajib diisi.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- BAGIAN 2 -->
+    <section class="card" id="bagian2">
+      <div class="card-head">
+        <p class="eyebrow">Bagian 2</p>
+        <h2>Data Kepegawaian</h2>
+      </div>
+      <div class="grid">
+        <div class="field" data-field="unit">
+          <label>Unit Kerja / Bidang <span class="req">*</span></label>
+          <select id="unit">
+            <option value="">Pilih unit kerja</option>
+            <option>Sekretariat</option>
+            <option>Bidang Bina Marga</option>
+            <option>Bidang Cipta Karya</option>
+            <option>Bidang Sumber Daya Air</option>
+            <option>Bidang Tata Ruang</option>
+            <option>Bidang Perumahan Rakyat</option>
+            <option>Bidang Jasa Konstruksi</option>
+            <option>UPTD</option>
+            <option>Lainnya</option>
+          </select>
+          <span class="err-msg">Wajib dipilih.</span>
+        </div>
+        <div class="field" data-field="jabatan">
+          <label>Jabatan <span class="req">*</span></label>
+          <input type="text" id="jabatan" placeholder="cth. Pengadministrasi Umum">
+          <span class="err-msg">Wajib diisi.</span>
+        </div>
+        <div class="field" data-field="golongan">
+          <label>Pangkat / Golongan Saat Ini <span class="req">*</span></label>
+          <select id="golongan"></select>
+          <span class="err-msg">Wajib dipilih.</span>
+        </div>
+        <div class="field" data-field="tmtPangkat">
+          <label>TMT Pangkat Terakhir <span class="req">*</span></label>
+          <input type="date" id="tmtPangkat">
+          <span class="err-msg">Wajib diisi.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- BAGIAN 3 -->
+    <section class="card" id="bagian3">
+      <div class="card-head">
+        <p class="eyebrow">Bagian 3</p>
+        <h2>Pilih Jenis Pengajuan</h2>
+      </div>
+      <div class="choice-group" id="jenisGroup" data-field="jenis">
+        <label class="choice" data-val="Kenaikan Pangkat Reguler">
+          <input type="radio" name="jenis" value="Kenaikan Pangkat Reguler">
+          <span class="ctext"><strong>Kenaikan Pangkat Reguler</strong><span>Kenaikan pangkat berkala sesuai masa kerja</span></span>
+        </label>
+        <label class="choice" data-val="Kenaikan Pangkat Penyesuaian Ijazah">
+          <input type="radio" name="jenis" value="Kenaikan Pangkat Penyesuaian Ijazah">
+          <span class="ctext"><strong>Kenaikan Pangkat Penyesuaian Ijazah</strong><span>Kenaikan pangkat karena peningkatan pendidikan</span></span>
+        </label>
+        <label class="choice" data-val="Kenaikan Gaji Berkala - KGB">
+          <input type="radio" name="jenis" value="Kenaikan Gaji Berkala - KGB">
+          <span class="ctext"><strong>Kenaikan Gaji Berkala (KGB)</strong><span>Penyesuaian gaji berkala rutin</span></span>
+        </label>
+      </div>
+      <span class="err-msg" id="jenisErr" style="display:none; margin-top:8px;">Silakan pilih salah satu jenis pengajuan.</span>
+    </section>
+
+    <!-- BAGIAN 4 -->
+    <section class="card" id="bagian4">
+      <div class="card-head">
+        <p class="eyebrow">Bagian 4</p>
+        <h2>Data Khusus</h2>
+        <p class="hint">Bagian ini menyesuaikan otomatis dengan jenis pengajuan yang dipilih pada Bagian 3.</p>
+      </div>
+
+      <div id="pangkatFields" style="display:none;">
+        <div class="subsection" style="margin-top:0; padding-top:0; border-top:none;">
+          <p class="sub-title">Untuk Pengajuan Kenaikan Pangkat</p>
+          <div class="grid">
+            <div class="field" data-field="pangkatDiusulkan">
+              <label>Pangkat Yang Diusulkan <span class="req">*</span></label>
+              <select id="pangkatDiusulkan"></select>
+              <span class="err-msg">Wajib dipilih.</span>
+            </div>
+            <div class="field" data-field="tmtDiusulkan">
+              <label>TMT Kenaikan Pangkat Yang Diusulkan <span class="req">*</span></label>
+              <input type="date" id="tmtDiusulkan">
+              <span class="err-msg">Wajib diisi.</span>
+            </div>
+          </div>
+          <div class="subsection">
+            <p class="sub-title">Berkas Pendukung</p>
+            <div class="grid">
+              <div class="field" data-field="fileSkp">
+                <label>Upload SKP 2 Tahun Terakhir (PDF) <span class="req">*</span></label>
+                <label class="file-drop" id="dropSkp">
+                  <span class="ficon">📄</span>
+                  <span class="ftext" id="textSkp"><b>Pilih file PDF</b>Maks. 2MB</span>
+                  <input type="file" accept="application/pdf" id="fileSkp">
+                </label>
+                <span class="err-msg">Wajib diunggah.</span>
+              </div>
+              <div class="field" data-field="fileIjazah">
+                <label>Upload Ijazah + Transkrip (PDF) <span class="req">*</span></label>
+                <label class="file-drop" id="dropIjazah">
+                  <span class="ficon">📄</span>
+                  <span class="ftext" id="textIjazah"><b>Pilih file PDF</b>Maks. 2MB</span>
+                  <input type="file" accept="application/pdf" id="fileIjazah">
+                </label>
+                <span class="err-msg">Wajib diunggah.</span>
+              </div>
+              <div class="field" data-field="jenjangIjazah">
+                <label>Jenjang Ijazah</label>
+                <select id="jenjangIjazah">
+                  <option value="">Pilih jenjang</option>
+                  <option>SMA/SMK</option>
+                  <option>D3</option>
+                  <option>D4/S1</option>
+                  <option>S2</option>
+                  <option>S3</option>
+                </select>
+              </div>
+              <div class="field" data-field="tglIjazah">
+                <label>Tanggal Ijazah</label>
+                <input type="date" id="tglIjazah">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="kgbFields" style="display:none;">
+        <div class="subsection" style="margin-top:0; padding-top:0; border-top:none;">
+          <p class="sub-title">Untuk Pengajuan KGB</p>
+          <div class="grid">
+            <div class="field" data-field="tmtKgb">
+              <label>TMT KGB Terakhir <span class="req">*</span></label>
+              <input type="date" id="tmtKgb">
+              <span class="err-msg">Wajib diisi.</span>
+            </div>
+            <div class="field" data-field="fileKgb">
+              <label>Upload SK KGB Terakhir (PDF) <span class="req">*</span></label>
+              <label class="file-drop" id="dropKgb">
+                <span class="ficon">📄</span>
+                <span class="ftext" id="textKgb"><b>Pilih file PDF</b>Maks. 2MB</span>
+                <input type="file" accept="application/pdf" id="fileKgb">
+              </label>
+              <span class="err-msg">Wajib diunggah.</span>
+            </div>
+            <div class="field" data-field="tglSkKgb">
+              <label>Tanggal SK KGB</label>
+              <input type="date" id="tglSkKgb">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="bagian4Empty" class="empty-state">Pilih jenis pengajuan pada Bagian 3 untuk menampilkan bagian ini.</div>
+    </section>
+
+    <!-- BAGIAN 5 -->
+    <section class="card" id="bagian5">
+      <div class="card-head">
+        <p class="eyebrow">Bagian 5</p>
+        <h2>Upload Berkas Wajib</h2>
+        <p class="hint">Seluruh berkas dalam format PDF, maksimal 2MB (foto boleh JPG/PNG).</p>
+      </div>
+      <div class="grid">
+        <div class="field" data-field="fileCpns">
+          <label>Upload SK CPNS &amp; PNS 100% <span class="req">*</span></label>
+          <label class="file-drop" id="dropCpns">
+            <span class="ficon">📄</span>
+            <span class="ftext" id="textCpns"><b>Pilih file PDF</b>Maks. 2MB</span>
+            <input type="file" accept="application/pdf" id="fileCpns">
+          </label>
+          <span class="err-msg">Wajib diunggah.</span>
+        </div>
+        <div class="field" data-field="filePangkatSk">
+          <label>Upload SK Pangkat Terakhir <span class="req">*</span></label>
+          <label class="file-drop" id="dropPangkatSk">
+            <span class="ficon">📄</span>
+            <span class="ftext" id="textPangkatSk"><b>Pilih file PDF</b>Maks. 2MB</span>
+            <input type="file" accept="application/pdf" id="filePangkatSk">
+          </label>
+          <span class="err-msg">Wajib diunggah.</span>
+        </div>
+        <div class="field" data-field="fileJabatanSk">
+          <label>Upload SK Jabatan Terakhir <span class="req">*</span></label>
+          <label class="file-drop" id="dropJabatanSk">
+            <span class="ficon">📄</span>
+            <span class="ftext" id="textJabatanSk"><b>Pilih file PDF</b>Maks. 2MB</span>
+            <input type="file" accept="application/pdf" id="fileJabatanSk">
+          </label>
+          <span class="err-msg">Wajib diunggah.</span>
+        </div>
+        <div class="field" data-field="filePhoto">
+          <label>Upload Pas Foto 3x4 Background Merah <span class="req">*</span></label>
+          <label class="file-drop" id="dropPhoto">
+            <span class="ficon">🖼️</span>
+            <span class="ftext" id="textPhoto"><b>Pilih file JPG/PNG</b>Maks. 2MB</span>
+            <input type="file" accept="image/*" id="filePhoto">
+          </label>
+          <span class="err-msg">Wajib diunggah.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- BAGIAN 6 -->
+    <section class="card" id="bagian6">
+      <div class="card-head">
+        <p class="eyebrow">Bagian 6</p>
+        <h2>Pernyataan</h2>
+      </div>
+      <div class="checkbox-line" data-field="pernyataan">
+        <input type="checkbox" id="pernyataan">
+        <label for="pernyataan">Saya menyatakan data dan berkas yang saya upload adalah benar. Jika terdapat ketidaksesuaian, saya bersedia menerima konsekuensi.</label>
+      </div>
+      <span class="err-msg" id="pernyataanErr" style="display:none; margin-top:8px;">Anda harus menyetujui pernyataan ini sebelum mengirim.</span>
+    </section>
+
+    <div class="actions-bar">
+      <span class="save-note" id="saveNote">Draf tersimpan otomatis</span>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <button type="button" class="btn-text" onclick="clearDraft()">Hapus draf</button>
+        <button type="submit" class="btn-primary" id="submitBtn">Kirim Pengajuan</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Receipt view (hidden until submit) -->
+<div class="receipt-wrap" id="receiptWrap" style="display:none;">
+  <div class="receipt">
+    <svg class="stamp" id="stampSvg" viewBox="0 0 120 120">
+      <g id="stampGroup" style="transform-origin:60px 60px;">
+        <circle cx="60" cy="60" r="52" fill="none" stroke="#A23B2E" stroke-width="2.5"/>
+        <circle cx="60" cy="60" r="44" fill="none" stroke="#A23B2E" stroke-width="1"/>
+        <path id="stampTextPath" d="M 60,16 A 44,44 0 1 1 59.9,16" fill="none"/>
+        <text font-family="JetBrains Mono" font-size="6.4" fill="#A23B2E" letter-spacing="2">
+          <textPath href="#stampTextPath" startOffset="1%">TELAH DITERIMA • KEPEGAWAIAN PUPR •</textPath>
+        </text>
+        <text x="60" y="57" text-anchor="middle" font-family="Source Serif 4" font-weight="700" font-size="15" fill="#A23B2E">DITERIMA</text>
+        <text x="60" y="72" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#A23B2E" id="stampDate">--</text>
+      </g>
+    </svg>
+    <h2>Pengajuan Berhasil Disimpan</h2>
+    <p>Simpan kode referensi berikut sebagai bukti, dan sampaikan ke Bidang Kepegawaian sesuai prosedur di kantor Anda.</p>
+    <div class="code-box" id="trackingCode">—</div>
+    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+      <button class="btn-primary" onclick="downloadReceipt()">Unduh Bukti (JSON)</button>
+      <button class="btn-ghost" style="color:var(--navy); border-color:var(--line);" onclick="resetForm()">Ajukan Lagi</button>
+    </div>
+    <p class="sub" id="receiptSubNote">Data lengkap pengajuan ini (termasuk berkas) tersimpan pada penyimpanan pribadi Anda di perangkat/akun ini, dapat dilihat lewat "Riwayat Saya".</p>
+  </div>
+</div>
+
+<!-- History drawer -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeHistory()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>Riwayat Pengajuan Saya</h3>
+    <button onclick="closeHistory()">×</button>
+  </div>
+  <div class="drawer-body" id="historyBody">
+    <div class="empty-state">Memuat…</div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   KONEKSI KE GOOGLE APPS SCRIPT
+   1. Buat Google Sheet baru, buka Extensions > Apps Script.
+   2. Tempel kode "Code.gs" yang diberikan terpisah, lalu Deploy
+      > New deployment > Web app (Execute as: Me, Who has access: Anyone).
+   3. Salin URL Web App yang muncul, tempel di antara tanda kutip di bawah ini.
+   4. Kosongkan ('') jika belum ingin memakai Apps Script — form tetap
+      berfungsi secara lokal saja.
+============================================================ */
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw86UnYx0KKTuqgCG3eRNjccueEr_pg2C-mSDm6UShzCOWLVCaWtz96yOgACk9ZnvQ/exec'; // <-- tempel URL Web App Apps Script Anda di sini
+
+const GOL = ["II/a","II/b","II/c","II/d","III/a","III/b","III/c","III/d","IV/a","IV/b","IV/c","IV/d","IV/e"];
+function fillSelect(id){
+  const el = document.getElementById(id);
+  el.innerHTML = '<option value="">Pilih golongan</option>' + GOL.map(g=>`<option>${g}</option>`).join('');
+}
+fillSelect('golongan');
+fillSelect('pangkatDiusulkan');
+
+if(APPS_SCRIPT_URL){
+  document.getElementById('topNotice').innerHTML = '✅ Formulir ini terhubung ke Google Sheet kepegawaian. Saat Anda mengirim, data akan otomatis tercatat di Sheet dan notifikasi email terkirim. Draf dan riwayat lokal tetap tersimpan di perangkat ini sebagai cadangan.';
+}
+
+const form = document.getElementById('mainForm');
+const DRAFT_KEY = 'draft:pengajuan-kepegawaian';
+let draftTimer = null;
+
+/* ---------- side nav active state via scroll ---------- */
+const sections = ['bagian1','bagian2','bagian3','bagian4','bagian5','bagian6'];
+const navItems = document.querySelectorAll('.nav-item');
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      navItems.forEach(n=>n.classList.toggle('active', n.dataset.target === e.target.id));
+    }
+  });
+},{rootMargin:'-20% 0px -70% 0px'});
+sections.forEach(id=>{ const el=document.getElementById(id); if(el) io.observe(el); });
+
+/* ---------- Bagian 3 -> Bagian 4 conditional logic ---------- */
+const jenisRadios = document.querySelectorAll('input[name="jenis"]');
+const pangkatFields = document.getElementById('pangkatFields');
+const kgbFields = document.getElementById('kgbFields');
+const bagian4Empty = document.getElementById('bagian4Empty');
+
+function updateBagian4(){
+  const val = form.querySelector('input[name="jenis"]:checked')?.value;
+  document.querySelectorAll('#jenisGroup .choice').forEach(c=>{
+    c.classList.toggle('selected', c.dataset.val === val);
+  });
+  pangkatFields.style.display = 'none';
+  kgbFields.style.display = 'none';
+  bagian4Empty.style.display = 'none';
+  if(val === 'Kenaikan Pangkat Reguler' || val === 'Kenaikan Pangkat Penyesuaian Ijazah'){
+    pangkatFields.style.display = 'block';
+  } else if(val === 'Kenaikan Gaji Berkala - KGB'){
+    kgbFields.style.display = 'block';
+  } else {
+    bagian4Empty.style.display = 'block';
+  }
+}
+jenisRadios.forEach(r=>r.addEventListener('change', ()=>{ updateBagian4(); queueSaveDraft(); }));
+updateBagian4();
+
+/* ---------- NIP digit-only enforcement ---------- */
+['nip18','nip16'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', e=>{
+    e.target.value = e.target.value.replace(/\D/g,'');
+  });
+});
+
+/* ---------- file inputs: read to base64, size guard ---------- */
+const fileFields = ['fileSkp','fileIjazah','fileKgb','fileCpns','filePangkatSk','fileJabatanSk','filePhoto'];
+const fileData = {}; // id -> {name, type, size, base64}
+
+fileFields.forEach(id=>{
+  const input = document.getElementById(id);
+  const drop = document.getElementById('drop' + id.slice(4));
+  const textEl = document.getElementById('text' + id.slice(4));
+  input.addEventListener('change', async ()=>{
+    const f = input.files[0];
+    if(!f) return;
+    if(f.size > 2*1024*1024){
+      alert('Ukuran file melebihi 2MB. Silakan kompres atau pilih file lain.');
+      input.value = '';
+      return;
+    }
+    const base64 = await new Promise((res,rej)=>{
+      const r = new FileReader();
+      r.onload = ()=>res(r.result);
+      r.onerror = rej;
+      r.readAsDataURL(f);
+    });
+    fileData[id] = {name:f.name, type:f.type, size:f.size, base64};
+    textEl.innerHTML = `<b>${f.name}</b>${(f.size/1024).toFixed(0)} KB — dipilih`;
+    drop.classList.add('file-ok');
+    clearFieldError(id);
+    queueSaveDraft();
+  });
+});
+
+/* ---------- validation ---------- */
+function setFieldError(fieldId, on){
+  const wrap = document.querySelector(`[data-field="${fieldId}"]`);
+  if(wrap) wrap.classList.toggle('error', on);
+}
+function clearFieldError(fieldId){ setFieldError(fieldId, false); }
+
+function validate(){
+  let ok = true;
+  const req = {
+    nama: ()=>document.getElementById('nama').value.trim().length>0,
+    nip18: ()=>document.getElementById('nip18').value.length===18,
+    nip16: ()=>document.getElementById('nip16').value.length===16,
+    hp: ()=>document.getElementById('hp').value.trim().length>=8,
+    unit: ()=>document.getElementById('unit').value !== '',
+    jabatan: ()=>document.getElementById('jabatan').value.trim().length>0,
+    golongan: ()=>document.getElementById('golongan').value !== '',
+    tmtPangkat: ()=>document.getElementById('tmtPangkat').value !== '',
+  };
+  for(const [id,fn] of Object.entries(req)){
+    const good = fn();
+    setFieldError(id, !good);
+    if(!good) ok = false;
+  }
+
+  const jenis = form.querySelector('input[name="jenis"]:checked')?.value;
+  const jenisErr = document.getElementById('jenisErr');
+  if(!jenis){ jenisErr.style.display='block'; ok=false; } else { jenisErr.style.display='none'; }
+
+  if(jenis === 'Kenaikan Pangkat Reguler' || jenis === 'Kenaikan Pangkat Penyesuaian Ijazah'){
+    const reqP = {
+      pangkatDiusulkan: ()=>document.getElementById('pangkatDiusulkan').value !== '',
+      tmtDiusulkan: ()=>document.getElementById('tmtDiusulkan').value !== '',
+      fileSkp: ()=>!!fileData.fileSkp,
+      fileIjazah: ()=>!!fileData.fileIjazah,
+    };
+    for(const [id,fn] of Object.entries(reqP)){
+      const good = fn();
+      setFieldError(id, !good);
+      if(!good) ok = false;
+    }
+  } else if(jenis === 'Kenaikan Gaji Berkala - KGB'){
+    const reqK = {
+      tmtKgb: ()=>document.getElementById('tmtKgb').value !== '',
+      fileKgb: ()=>!!fileData.fileKgb,
+    };
+    for(const [id,fn] of Object.entries(reqK)){
+      const good = fn();
+      setFieldError(id, !good);
+      if(!good) ok = false;
+    }
+  }
+
+  const reqAll5 = {
+    fileCpns: ()=>!!fileData.fileCpns,
+    filePangkatSk: ()=>!!fileData.filePangkatSk,
+    fileJabatanSk: ()=>!!fileData.fileJabatanSk,
+    filePhoto: ()=>!!fileData.filePhoto,
+  };
+  for(const [id,fn] of Object.entries(reqAll5)){
+    const good = fn();
+    setFieldError(id, !good);
+    if(!good) ok = false;
+  }
+
+  const pernyataanErr = document.getElementById('pernyataanErr');
+  const pernyataanOk = document.getElementById('pernyataan').checked;
+  pernyataanErr.style.display = pernyataanOk ? 'none' : 'block';
+  if(!pernyataanOk) ok = false;
+
+  return ok;
+}
+
+/* ---------- draft autosave (personal storage) ---------- */
+function collectFormValues(){
+  return {
+    nama: document.getElementById('nama').value,
+    email: document.getElementById('email').value,
+    nip18: document.getElementById('nip18').value,
+    nip16: document.getElementById('nip16').value,
+    hp: document.getElementById('hp').value,
+    unit: document.getElementById('unit').value,
+    jabatan: document.getElementById('jabatan').value,
+    golongan: document.getElementById('golongan').value,
+    tmtPangkat: document.getElementById('tmtPangkat').value,
+    jenis: form.querySelector('input[name="jenis"]:checked')?.value || '',
+    pangkatDiusulkan: document.getElementById('pangkatDiusulkan').value,
+    tmtDiusulkan: document.getElementById('tmtDiusulkan').value,
+    jenjangIjazah: document.getElementById('jenjangIjazah').value,
+    tglIjazah: document.getElementById('tglIjazah').value,
+    tmtKgb: document.getElementById('tmtKgb').value,
+    tglSkKgb: document.getElementById('tglSkKgb').value,
+    pernyataan: document.getElementById('pernyataan').checked,
+  };
+}
+
+function applyFormValues(v){
+  if(!v) return;
+  document.getElementById('nama').value = v.nama||'';
+  document.getElementById('email').value = v.email||'';
+  document.getElementById('nip18').value = v.nip18||'';
+  document.getElementById('nip16').value = v.nip16||'';
+  document.getElementById('hp').value = v.hp||'';
+  document.getElementById('unit').value = v.unit||'';
+  document.getElementById('jabatan').value = v.jabatan||'';
+  document.getElementById('golongan').value = v.golongan||'';
+  document.getElementById('tmtPangkat').value = v.tmtPangkat||'';
+  if(v.jenis){
+    const r = form.querySelector(`input[name="jenis"][value="${CSS.escape(v.jenis)}"]`);
+    if(r) r.checked = true;
+  }
+  document.getElementById('pangkatDiusulkan').value = v.pangkatDiusulkan||'';
+  document.getElementById('tmtDiusulkan').value = v.tmtDiusulkan||'';
+  document.getElementById('jenjangIjazah').value = v.jenjangIjazah||'';
+  document.getElementById('tglIjazah').value = v.tglIjazah||'';
+  document.getElementById('tmtKgb').value = v.tmtKgb||'';
+  document.getElementById('tglSkKgb').value = v.tglSkKgb||'';
+  document.getElementById('pernyataan').checked = !!v.pernyataan;
+  updateBagian4();
+}
+
+function queueSaveDraft(){
+  document.getElementById('saveNote').textContent = 'Menyimpan draf…';
+  clearTimeout(draftTimer);
+  draftTimer = setTimeout(saveDraft, 600);
+}
+
+async function saveDraft(){
+  try{
+    await window.storage.set(DRAFT_KEY, JSON.stringify(collectFormValues()), false);
+    document.getElementById('saveNote').textContent = 'Draf tersimpan otomatis';
+  }catch(err){
+    document.getElementById('saveNote').textContent = 'Gagal menyimpan draf';
+  }
+}
+
+async function loadDraft(){
+  try{
+    const res = await window.storage.get(DRAFT_KEY, false);
+    if(res && res.value) applyFormValues(JSON.parse(res.value));
+  }catch(err){ /* no draft yet */ }
+}
+
+form.addEventListener('input', queueSaveDraft);
+form.addEventListener('change', queueSaveDraft);
+loadDraft();
+
+async function clearDraft(){
+  if(!confirm('Hapus draf yang tersimpan di perangkat ini?')) return;
+  try{
+    await window.storage.delete(DRAFT_KEY, false);
+  }catch(err){}
+  form.reset();
+  Object.keys(fileData).forEach(k=>delete fileData[k]);
+  fileFields.forEach(id=>{
+    document.getElementById('text'+id.slice(4)).innerHTML = '<b>Pilih file PDF</b>Maks. 2MB';
+    document.getElementById('drop'+id.slice(4)).classList.remove('file-ok');
+  });
+  updateBagian4();
+  document.getElementById('saveNote').textContent = 'Draf dihapus';
+}
+
+/* ---------- submit ---------- */
+function genTrackingCode(){
+  const d = new Date();
+  const ymd = d.toISOString().slice(0,10).replace(/-/g,'');
+  const rand = Math.random().toString(36).slice(2,6).toUpperCase();
+  return `PUPR-KP-${ymd}-${rand}`;
+}
+
+let lastSubmission = null;
+
+async function sendToAppsScript(record){
+  if(!APPS_SCRIPT_URL) return {sent:false, reason:'not-configured'};
+  try{
+    const payload = {...record, files: fileData}; // fileData has base64 per field
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain;charset=utf-8'}, // avoids CORS preflight
+      body: JSON.stringify(payload),
+    });
+    const json = await res.json().catch(()=>({ok:false}));
+    return {sent: !!json.ok, reason: json.ok ? 'ok' : (json.error || 'unknown-error')};
+  }catch(err){
+    return {sent:false, reason:String(err)};
+  }
+}
+
+form.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  if(!validate()){
+    const firstError = document.querySelector('.field.error, #jenisErr[style*="block"], #pernyataanErr[style*="block"]');
+    if(firstError) firstError.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = 'Mengirim…';
+
+  const values = collectFormValues();
+  const code = genTrackingCode();
+  const submissionId = code;
+  const submittedAt = new Date().toISOString();
+
+  try{
+    // store each file under its own personal key
+    for(const [fid, data] of Object.entries(fileData)){
+      await window.storage.set(`file:${submissionId}:${fid}`, JSON.stringify(data), false);
+    }
+    const record = {
+      id: submissionId,
+      submittedAt,
+      ...values,
+      files: Object.keys(fileData),
+      status: 'Diterima - Menunggu Verifikasi',
+    };
+    await window.storage.set(`submission:${submissionId}`, JSON.stringify(record), false);
+    await window.storage.delete(DRAFT_KEY, false).catch(()=>{});
+    lastSubmission = record;
+
+    const remote = await sendToAppsScript(record);
+    record.remoteSent = remote.sent;
+    showReceipt(record, remote);
+  }catch(err){
+    alert('Terjadi kendala saat menyimpan pengajuan. Silakan coba lagi.');
+    btn.disabled = false; btn.textContent = 'Kirim Pengajuan';
+  }
+});
+
+function showReceipt(record, remote){
+  document.getElementById('formLayout').style.display = 'none';
+  document.getElementById('receiptWrap').style.display = 'flex';
+  document.getElementById('trackingCode').textContent = record.id;
+  document.getElementById('stampDate').textContent = new Date(record.submittedAt).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'});
+  const subNote = document.getElementById('receiptSubNote');
+  if(subNote){
+    if(!APPS_SCRIPT_URL){
+      subNote.textContent = 'Data lengkap pengajuan ini (termasuk berkas) tersimpan pada penyimpanan pribadi Anda di perangkat/akun ini, dapat dilihat lewat "Riwayat Saya". Formulir ini belum terhubung ke Google Sheet — unduh bukti dan sampaikan manual ke kepegawaian.';
+    } else if(remote && remote.sent){
+      subNote.textContent = 'Pengajuan ini juga sudah tercatat di Google Sheet kepegawaian dan notifikasi email telah dikirim.';
+    } else {
+      subNote.textContent = 'Pengajuan tersimpan di perangkat ini, namun gagal terkirim ke Google Sheet kepegawaian (' + (remote ? remote.reason : 'tidak diketahui') + '). Silakan unduh bukti dan sampaikan manual, atau coba kirim ulang.';
+    }
+  }
+  const g = document.getElementById('stampGroup');
+  g.style.transform = 'scale(2.4) rotate(-12deg)';
+  g.style.opacity = '0';
+  g.style.transition = 'transform .5s cubic-bezier(.2,.8,.2,1), opacity .3s ease';
+  requestAnimationFrame(()=>{
+    setTimeout(()=>{
+      g.style.transform = 'scale(1) rotate(-8deg)';
+      g.style.opacity = '1';
+    }, 120);
+  });
+}
+
+function resetForm(){
+  document.getElementById('formLayout').style.display = 'grid';
+  document.getElementById('receiptWrap').style.display = 'none';
+  form.reset();
+  Object.keys(fileData).forEach(k=>delete fileData[k]);
+  fileFields.forEach(id=>{
+    document.getElementById('text'+id.slice(4)).innerHTML = '<b>Pilih file PDF</b>Maks. 2MB';
+    document.getElementById('drop'+id.slice(4)).classList.remove('file-ok');
+  });
+  document.querySelectorAll('.field.error').forEach(f=>f.classList.remove('error'));
+  updateBagian4();
+  document.getElementById('submitBtn').disabled = false;
+  document.getElementById('submitBtn').textContent = 'Kirim Pengajuan';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function downloadReceipt(){
+  if(!lastSubmission) return;
+  const safe = {...lastSubmission};
+  delete safe.files; // avoid dumping base64 into the receipt
+  const blob = new Blob([JSON.stringify(safe, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `bukti-pengajuan-${lastSubmission.id}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ---------- history drawer ---------- */
+async function openHistory(){
+  document.getElementById('drawerBackdrop').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+  const body = document.getElementById('historyBody');
+  body.innerHTML = '<div class="empty-state">Memuat…</div>';
+  try{
+    const listRes = await window.storage.list('submission:', false);
+    const keys = (listRes && listRes.keys) || [];
+    if(keys.length === 0){
+      body.innerHTML = '<div class="empty-state">Belum ada pengajuan yang tersimpan di perangkat ini.</div>';
+      return;
+    }
+    const items = [];
+    for(const k of keys){
+      try{
+        const r = await window.storage.get(k, false);
+        if(r && r.value) items.push(JSON.parse(r.value));
+      }catch(err){}
+    }
+    items.sort((a,b)=> new Date(b.submittedAt) - new Date(a.submittedAt));
+    body.innerHTML = items.map(it => `
+      <div class="hist-item">
+        <div class="htitle">${escapeHtml(it.jenis || 'Pengajuan')}</div>
+        <div class="hmeta">${it.id} · ${new Date(it.submittedAt).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'})}</div>
+        <div class="hmeta">${escapeHtml(it.nama || '')}</div>
+        <span class="hstatus">${escapeHtml(it.status || 'Diterima')}</span>
+      </div>
+    `).join('');
+  }catch(err){
+    body.innerHTML = '<div class="empty-state">Gagal memuat riwayat.</div>';
+  }
+}
+function closeHistory(){
+  document.getElementById('drawerBackdrop').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+</script>
+</body>
+</html>
