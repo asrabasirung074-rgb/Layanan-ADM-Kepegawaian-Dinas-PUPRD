@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Formulir Pengajuan Kepegawaian — Dinas PUPR</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://script.google.com/macros/s/AKfycbw86UnYx0KKTuqgCG3eRNjccueEr_pg2C-mSDm6UShzCOWLVCaWtz96yOgACk9ZnvQ/exec">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --navy:#1C3D5A;
@@ -327,7 +328,7 @@
       <p>Isi seluruh bagian di bawah ini. Draf tersimpan otomatis di perangkat Anda.</p>
     </div>
     <div class="masthead-actions">
-      <button class="btn-ghost" onclick="openHistory()">Riwayat Saya</button>
+      <button class="btn-ghost" onclick="openHistory()" type="button">Riwayat Saya</button>
     </div>
   </div>
 </header>
@@ -345,7 +346,7 @@
   <form class="main-col" id="mainForm" novalidate>
 
     <div class="notice" id="topNotice">
-      ⚠️ Formulir ini menyimpan draf dan riwayat pengajuan hanya di penyimpanan pribadi Anda pada perangkat/akun ini — data tidak dibagikan ke pengguna lain. Formulir ini <b>belum terhubung ke Google Sheet</b>; setelah mengirim, unduh bukti pengajuan dan sampaikan ke bagian kepegawaian sesuai prosedur kantor Anda.
+      ⚠️ Formulir ini menyimpan draf dan riwayat pengajuan hanya di penyimpanan lokal (localStorage) pada perangkat/browser ini — data tidak dibagikan ke pengguna lain. Formulir ini <b>belum terhubung ke Google Sheet</b>; setelah mengirim, unduh bukti pengajuan dan sampaikan ke bagian kepegawaian sesuai prosedur kantor Anda.
     </div>
 
     <!-- BAGIAN 1 -->
@@ -628,10 +629,10 @@
     <p>Simpan kode referensi berikut sebagai bukti, dan sampaikan ke Bidang Kepegawaian sesuai prosedur di kantor Anda.</p>
     <div class="code-box" id="trackingCode">—</div>
     <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-      <button class="btn-primary" onclick="downloadReceipt()">Unduh Bukti (JSON)</button>
-      <button class="btn-ghost" style="color:var(--navy); border-color:var(--line);" onclick="resetForm()">Ajukan Lagi</button>
+      <button class="btn-primary" onclick="downloadReceipt()" type="button">Unduh Bukti (JSON)</button>
+      <button class="btn-ghost" style="color:var(--navy); border-color:var(--line);" onclick="resetForm()" type="button">Ajukan Lagi</button>
     </div>
-    <p class="sub" id="receiptSubNote">Data lengkap pengajuan ini (termasuk berkas) tersimpan pada penyimpanan pribadi Anda di perangkat/akun ini, dapat dilihat lewat "Riwayat Saya".</p>
+    <p class="sub" id="receiptSubNote">Data lengkap pengajuan ini (termasuk berkas) tersimpan di localStorage browser ini, dapat dilihat lewat "Riwayat Saya".</p>
   </div>
 </div>
 
@@ -640,7 +641,7 @@
 <div class="drawer" id="drawer">
   <div class="drawer-head">
     <h3>Riwayat Pengajuan Saya</h3>
-    <button onclick="closeHistory()">×</button>
+    <button onclick="closeHistory()" type="button">×</button>
   </div>
   <div class="drawer-body" id="historyBody">
     <div class="empty-state">Memuat…</div>
@@ -668,7 +669,7 @@ fillSelect('golongan');
 fillSelect('pangkatDiusulkan');
 
 if(APPS_SCRIPT_URL){
-  document.getElementById('topNotice').innerHTML = '✅ Formulir ini terhubung ke Google Sheet kepegawaian. Saat Anda mengirim, data akan otomatis tercatat di Sheet dan notifikasi email terkirim. Draf dan riwayat lokal tetap tersimpan di perangkat ini sebagai cadangan.';
+  document.getElementById('topNotice').innerHTML = '✅ Formulir ini terhubung ke Google Sheet kepegawaian. Saat Anda mengirim, data akan otomatis tercatat di Sheet dan notifikasi email terkirim. Draf dan riwayat lokal tetap tersimpan di browser ini sebagai cadangan.';
 }
 
 const form = document.getElementById('mainForm');
@@ -822,7 +823,7 @@ function validate(){
   return ok;
 }
 
-/* ---------- draft autosave (personal storage) ---------- */
+/* ---------- draft autosave (browser localStorage) ---------- */
 function collectFormValues(){
   return {
     nama: document.getElementById('nama').value,
@@ -876,30 +877,35 @@ function queueSaveDraft(){
   draftTimer = setTimeout(saveDraft, 600);
 }
 
-async function saveDraft(){
+function saveDraft(){
   try{
-    await window.storage.set(DRAFT_KEY, JSON.stringify(collectFormValues()), false);
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(collectFormValues()));
     document.getElementById('saveNote').textContent = 'Draf tersimpan otomatis';
   }catch(err){
+    console.error(err);
     document.getElementById('saveNote').textContent = 'Gagal menyimpan draf';
   }
 }
 
-async function loadDraft(){
+function loadDraft(){
   try{
-    const res = await window.storage.get(DRAFT_KEY, false);
-    if(res && res.value) applyFormValues(JSON.parse(res.value));
-  }catch(err){ /* no draft yet */ }
+    const value = localStorage.getItem(DRAFT_KEY);
+    if(value){
+      applyFormValues(JSON.parse(value));
+    }
+  }catch(err){
+    console.error(err);
+  }
 }
 
 form.addEventListener('input', queueSaveDraft);
 form.addEventListener('change', queueSaveDraft);
 loadDraft();
 
-async function clearDraft(){
+function clearDraft(){
   if(!confirm('Hapus draf yang tersimpan di perangkat ini?')) return;
   try{
-    await window.storage.delete(DRAFT_KEY, false);
+    localStorage.removeItem(DRAFT_KEY);
   }catch(err){}
   form.reset();
   Object.keys(fileData).forEach(k=>delete fileData[k]);
@@ -953,9 +959,9 @@ form.addEventListener('submit', async (e)=>{
   const submittedAt = new Date().toISOString();
 
   try{
-    // store each file under its own personal key
+    // simpan tiap file di key localStorage tersendiri
     for(const [fid, data] of Object.entries(fileData)){
-      await window.storage.set(`file:${submissionId}:${fid}`, JSON.stringify(data), false);
+      localStorage.setItem(`file:${submissionId}:${fid}`, JSON.stringify(data));
     }
     const record = {
       id: submissionId,
@@ -964,15 +970,16 @@ form.addEventListener('submit', async (e)=>{
       files: Object.keys(fileData),
       status: 'Diterima - Menunggu Verifikasi',
     };
-    await window.storage.set(`submission:${submissionId}`, JSON.stringify(record), false);
-    await window.storage.delete(DRAFT_KEY, false).catch(()=>{});
+    localStorage.setItem(`submission:${submissionId}`, JSON.stringify(record));
+    localStorage.removeItem(DRAFT_KEY);
     lastSubmission = record;
 
     const remote = await sendToAppsScript(record);
     record.remoteSent = remote.sent;
     showReceipt(record, remote);
   }catch(err){
-    alert('Terjadi kendala saat menyimpan pengajuan. Silakan coba lagi.');
+    console.error(err);
+    alert('Terjadi kendala saat menyimpan pengajuan (kemungkinan penyimpanan browser penuh). Silakan coba lagi atau kosongkan riwayat lama.');
     btn.disabled = false; btn.textContent = 'Kirim Pengajuan';
   }
 });
@@ -985,7 +992,7 @@ function showReceipt(record, remote){
   const subNote = document.getElementById('receiptSubNote');
   if(subNote){
     if(!APPS_SCRIPT_URL){
-      subNote.textContent = 'Data lengkap pengajuan ini (termasuk berkas) tersimpan pada penyimpanan pribadi Anda di perangkat/akun ini, dapat dilihat lewat "Riwayat Saya". Formulir ini belum terhubung ke Google Sheet — unduh bukti dan sampaikan manual ke kepegawaian.';
+      subNote.textContent = 'Data lengkap pengajuan ini (termasuk berkas) tersimpan di localStorage browser ini, dapat dilihat lewat "Riwayat Saya". Formulir ini belum terhubung ke Google Sheet — unduh bukti dan sampaikan manual ke kepegawaian.';
     } else if(remote && remote.sent){
       subNote.textContent = 'Pengajuan ini juga sudah tercatat di Google Sheet kepegawaian dan notifikasi email telah dikirim.';
     } else {
@@ -1033,30 +1040,31 @@ function downloadReceipt(){
 }
 
 /* ---------- history drawer ---------- */
-async function openHistory(){
+function openHistory(){
   document.getElementById('drawerBackdrop').classList.add('open');
   document.getElementById('drawer').classList.add('open');
   const body = document.getElementById('historyBody');
   body.innerHTML = '<div class="empty-state">Memuat…</div>';
   try{
-    const listRes = await window.storage.list('submission:', false);
-    const keys = (listRes && listRes.keys) || [];
-    if(keys.length === 0){
+    const items = [];
+    for(let i=0; i<localStorage.length; i++){
+      const k = localStorage.key(i);
+      if(k && k.startsWith('submission:')){
+        try{
+          const raw = localStorage.getItem(k);
+          if(raw) items.push(JSON.parse(raw));
+        }catch(err){}
+      }
+    }
+    if(items.length === 0){
       body.innerHTML = '<div class="empty-state">Belum ada pengajuan yang tersimpan di perangkat ini.</div>';
       return;
-    }
-    const items = [];
-    for(const k of keys){
-      try{
-        const r = await window.storage.get(k, false);
-        if(r && r.value) items.push(JSON.parse(r.value));
-      }catch(err){}
     }
     items.sort((a,b)=> new Date(b.submittedAt) - new Date(a.submittedAt));
     body.innerHTML = items.map(it => `
       <div class="hist-item">
         <div class="htitle">${escapeHtml(it.jenis || 'Pengajuan')}</div>
-        <div class="hmeta">${it.id} · ${new Date(it.submittedAt).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'})}</div>
+        <div class="hmeta">${escapeHtml(it.id)} · ${new Date(it.submittedAt).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'})}</div>
         <div class="hmeta">${escapeHtml(it.nama || '')}</div>
         <span class="hstatus">${escapeHtml(it.status || 'Diterima')}</span>
       </div>
@@ -1072,7 +1080,6 @@ function closeHistory(){
 function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
-
 </script>
 </body>
 </html>
