@@ -24,7 +24,7 @@
 
 const SHEET_NAME = 'Pengajuan';
 const FOLDER_NAME = 'Berkas Pengajuan Kepegawaian';
-const NOTIFY_EMAIL = 'kepegawaian@instansi-anda.go.id'; // <-- GANTI dengan email tujuan
+const NOTIFY_EMAIL = 'asrabasirung074@gmail.com'; // <-- GANTI dengan email tujuan
 const SECRET_TOKEN = ''; // opsional: isi string rahasia sama di sisi HTML jika ingin proteksi tambahan
 
 function doPost(e) {
