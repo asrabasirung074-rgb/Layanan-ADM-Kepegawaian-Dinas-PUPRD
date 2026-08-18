@@ -715,10 +715,8 @@ const SYARAT = {
   'Kenaikan Gaji Berkala - KGB': {
     desc: 'Penyesuaian gaji berkala rutin.',
     syarat: [
-      'Telah melewati masa kerja 2 tahun sejak KGB atau kenaikan pangkat terakhir',
+      'SK jabatan terakhir',
       'SK KGB terakhir sebagai dasar perhitungan',
-      'SKP tahun berjalan bernilai baik',
-      'Tidak sedang menjalani hukuman disiplin'
     ]
   }
 };
@@ -806,7 +804,7 @@ const BERKAS_MAP = {
   }},
   'Kenaikan Gaji Berkala - KGB': { flat: [
     {id:'fileKgb', label:'SK KGB Terakhir', accept:'pdf', required:true},
-    {id:'skpTahunBerjalanKgb', label:'SKP Tahun Berjalan', accept:'pdf', required:true}
+    {id:'skjabatanterakhir', label:'SK jabatan terakhir', accept:'pdf', required:true}
   ]}
 };
 
