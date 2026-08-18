@@ -166,6 +166,7 @@
   .field{display:flex; flex-direction:column; gap:6px;}
   .field label{font-size:12.5px; font-weight:600; color:var(--navy-deep);}
   .field label .req{color:var(--brick); margin-left:2px;}
+  .field label .opt{color:var(--ink-soft); font-weight:500; font-size:11px; margin-left:4px;}
   .field .desc{font-size:11.5px; color:var(--ink-soft); margin-top:-2px;}
   input[type=text], input[type=tel], input[type=email], input[type=date], select{
     font-family:var(--sans); font-size:14px; color:var(--ink);
@@ -192,6 +193,42 @@
   .choice.selected{border-color:var(--navy); background:#F1F5F9;}
   .choice .ctext strong{display:block; font-size:13.5px; color:var(--navy-deep);}
   .choice .ctext span{font-size:12px; color:var(--ink-soft);}
+
+  /* syarat pengajuan box */
+  .syarat-box{
+    margin-top:14px;
+    background:#F1F5F9;
+    border:1px solid var(--line);
+    border-left:3px solid var(--navy);
+    border-radius:8px;
+    padding:14px 16px;
+    animation:syaratIn .18s ease;
+  }
+  @keyframes syaratIn{
+    from{opacity:0; transform:translateY(-4px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  .syarat-head{display:flex; gap:10px; align-items:flex-start; margin-bottom:10px;}
+  .syarat-icon{
+    flex:none; width:28px; height:28px; border-radius:7px;
+    background:var(--navy); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-size:14px;
+  }
+  .syarat-head strong{font-size:13.5px; color:var(--navy-deep); display:block;}
+  .syarat-head p{margin:2px 0 0; font-size:12px; color:var(--ink-soft);}
+  .syarat-list{margin:0; padding-left:20px; display:flex; flex-direction:column; gap:6px;}
+  .syarat-list li{font-size:12.5px; color:var(--ink); line-height:1.5;}
+  .syarat-list li::marker{color:var(--gold);}
+  .syarat-note{font-size:11px; color:var(--ink-soft); font-style:italic; margin:10px 0 0;}
+  .kategori-pills{display:flex; gap:7px; flex-wrap:wrap; margin-bottom:12px;}
+  .kategori-pill{
+    font-family:var(--sans); font-size:11.5px; font-weight:600;
+    padding:7px 12px; border-radius:20px; border:1px solid var(--line);
+    background:#fff; color:var(--ink-soft); cursor:pointer;
+    transition:background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .kategori-pill:hover{border-color:var(--gold);}
+  .kategori-pill.active{background:var(--navy); color:#fff; border-color:var(--navy);}
 
   /* file upload */
   .file-drop{
@@ -339,7 +376,7 @@
     <a class="nav-item" href="#bagian2" data-target="bagian2"><span class="dot"><span>2</span></span> Data Kepegawaian</a>
     <a class="nav-item" href="#bagian3" data-target="bagian3"><span class="dot"><span>3</span></span> Jenis Pengajuan</a>
     <a class="nav-item" href="#bagian4" data-target="bagian4"><span class="dot"><span>4</span></span> Data Khusus</a>
-    <a class="nav-item" href="#bagian5" data-target="bagian5"><span class="dot"><span>5</span></span> Berkas Wajib</a>
+    <a class="nav-item" href="#bagian5" data-target="bagian5"><span class="dot"><span>5</span></span> Berkas Pengajuan</a>
     <a class="nav-item" href="#bagian6" data-target="bagian6"><span class="dot"><span>6</span></span> Pernyataan</a>
   </nav>
 
@@ -429,6 +466,7 @@
       <div class="card-head">
         <p class="eyebrow">Bagian 3</p>
         <h2>Pilih Jenis Pengajuan</h2>
+        <p class="hint">Setiap jenis pengajuan memiliki syarat dan berkas wajib yang berbeda. Syarat dan daftar upload akan tampil otomatis setelah Anda memilih.</p>
       </div>
       <div class="choice-group" id="jenisGroup" data-field="jenis">
         <label class="choice" data-val="Kenaikan Pangkat Reguler">
@@ -445,6 +483,9 @@
         </label>
       </div>
       <span class="err-msg" id="jenisErr" style="display:none; margin-top:8px;">Silakan pilih salah satu jenis pengajuan.</span>
+
+      <!-- Kotak syarat pengajuan, berubah sesuai pilihan di atas -->
+      <div class="syarat-box" id="syaratBox" style="display:none;"></div>
     </section>
 
     <!-- BAGIAN 4 -->
@@ -455,84 +496,31 @@
         <p class="hint">Bagian ini menyesuaikan otomatis dengan jenis pengajuan yang dipilih pada Bagian 3.</p>
       </div>
 
-      <div id="pangkatFields" style="display:none;">
-        <div class="subsection" style="margin-top:0; padding-top:0; border-top:none;">
-          <p class="sub-title">Untuk Pengajuan Kenaikan Pangkat</p>
-          <div class="grid">
-            <div class="field" data-field="pangkatDiusulkan">
-              <label>Pangkat Yang Diusulkan <span class="req">*</span></label>
-              <select id="pangkatDiusulkan"></select>
-              <span class="err-msg">Wajib dipilih.</span>
-            </div>
-            <div class="field" data-field="tmtDiusulkan">
-              <label>TMT Kenaikan Pangkat Yang Diusulkan <span class="req">*</span></label>
-              <input type="date" id="tmtDiusulkan">
-              <span class="err-msg">Wajib diisi.</span>
-            </div>
+      <div id="pangkatMetaFields" style="display:none;">
+        <div class="grid">
+          <div class="field" data-field="pangkatDiusulkan">
+            <label>Pangkat Yang Diusulkan <span class="req">*</span></label>
+            <select id="pangkatDiusulkan"></select>
+            <span class="err-msg">Wajib dipilih.</span>
           </div>
-          <div class="subsection">
-            <p class="sub-title">Berkas Pendukung</p>
-            <div class="grid">
-              <div class="field" data-field="fileSkp">
-                <label>Upload SKP 2 Tahun Terakhir (PDF) <span class="req">*</span></label>
-                <label class="file-drop" id="dropSkp">
-                  <span class="ficon">📄</span>
-                  <span class="ftext" id="textSkp"><b>Pilih file PDF</b>Maks. 2MB</span>
-                  <input type="file" accept="application/pdf" id="fileSkp">
-                </label>
-                <span class="err-msg">Wajib diunggah.</span>
-              </div>
-              <div class="field" data-field="fileIjazah">
-                <label>Upload Ijazah + Transkrip (PDF) <span class="req">*</span></label>
-                <label class="file-drop" id="dropIjazah">
-                  <span class="ficon">📄</span>
-                  <span class="ftext" id="textIjazah"><b>Pilih file PDF</b>Maks. 2MB</span>
-                  <input type="file" accept="application/pdf" id="fileIjazah">
-                </label>
-                <span class="err-msg">Wajib diunggah.</span>
-              </div>
-              <div class="field" data-field="jenjangIjazah">
-                <label>Jenjang Ijazah</label>
-                <select id="jenjangIjazah">
-                  <option value="">Pilih jenjang</option>
-                  <option>SMA/SMK</option>
-                  <option>D3</option>
-                  <option>D4/S1</option>
-                  <option>S2</option>
-                  <option>S3</option>
-                </select>
-              </div>
-              <div class="field" data-field="tglIjazah">
-                <label>Tanggal Ijazah</label>
-                <input type="date" id="tglIjazah">
-              </div>
-            </div>
+          <div class="field" data-field="tmtDiusulkan">
+            <label>TMT Kenaikan Pangkat Yang Diusulkan <span class="req">*</span></label>
+            <input type="date" id="tmtDiusulkan">
+            <span class="err-msg">Wajib diisi.</span>
           </div>
         </div>
       </div>
 
-      <div id="kgbFields" style="display:none;">
-        <div class="subsection" style="margin-top:0; padding-top:0; border-top:none;">
-          <p class="sub-title">Untuk Pengajuan KGB</p>
-          <div class="grid">
-            <div class="field" data-field="tmtKgb">
-              <label>TMT KGB Terakhir <span class="req">*</span></label>
-              <input type="date" id="tmtKgb">
-              <span class="err-msg">Wajib diisi.</span>
-            </div>
-            <div class="field" data-field="fileKgb">
-              <label>Upload SK KGB Terakhir (PDF) <span class="req">*</span></label>
-              <label class="file-drop" id="dropKgb">
-                <span class="ficon">📄</span>
-                <span class="ftext" id="textKgb"><b>Pilih file PDF</b>Maks. 2MB</span>
-                <input type="file" accept="application/pdf" id="fileKgb">
-              </label>
-              <span class="err-msg">Wajib diunggah.</span>
-            </div>
-            <div class="field" data-field="tglSkKgb">
-              <label>Tanggal SK KGB</label>
-              <input type="date" id="tglSkKgb">
-            </div>
+      <div id="kgbMetaFields" style="display:none;">
+        <div class="grid">
+          <div class="field" data-field="tmtKgb">
+            <label>TMT KGB Terakhir <span class="req">*</span></label>
+            <input type="date" id="tmtKgb">
+            <span class="err-msg">Wajib diisi.</span>
+          </div>
+          <div class="field" data-field="tglSkKgb">
+            <label>Tanggal SK KGB</label>
+            <input type="date" id="tglSkKgb">
           </div>
         </div>
       </div>
@@ -544,47 +532,10 @@
     <section class="card" id="bagian5">
       <div class="card-head">
         <p class="eyebrow">Bagian 5</p>
-        <h2>Upload Berkas Wajib</h2>
-        <p class="hint">Seluruh berkas dalam format PDF, maksimal 2MB (foto boleh JPG/PNG).</p>
+        <h2>Berkas Pengajuan</h2>
+        <p class="hint" id="berkasHint">Pilih jenis pengajuan pada Bagian 3 (dan kategori jabatan bila diminta) untuk menampilkan daftar berkas yang wajib diunggah.</p>
       </div>
-      <div class="grid">
-        <div class="field" data-field="fileCpns">
-          <label>Upload SK CPNS &amp; PNS 100% <span class="req">*</span></label>
-          <label class="file-drop" id="dropCpns">
-            <span class="ficon">📄</span>
-            <span class="ftext" id="textCpns"><b>Pilih file PDF</b>Maks. 2MB</span>
-            <input type="file" accept="application/pdf" id="fileCpns">
-          </label>
-          <span class="err-msg">Wajib diunggah.</span>
-        </div>
-        <div class="field" data-field="filePangkatSk">
-          <label>Upload SK Pangkat Terakhir <span class="req">*</span></label>
-          <label class="file-drop" id="dropPangkatSk">
-            <span class="ficon">📄</span>
-            <span class="ftext" id="textPangkatSk"><b>Pilih file PDF</b>Maks. 2MB</span>
-            <input type="file" accept="application/pdf" id="filePangkatSk">
-          </label>
-          <span class="err-msg">Wajib diunggah.</span>
-        </div>
-        <div class="field" data-field="fileJabatanSk">
-          <label>Upload SK Jabatan Terakhir <span class="req">*</span></label>
-          <label class="file-drop" id="dropJabatanSk">
-            <span class="ficon">📄</span>
-            <span class="ftext" id="textJabatanSk"><b>Pilih file PDF</b>Maks. 2MB</span>
-            <input type="file" accept="application/pdf" id="fileJabatanSk">
-          </label>
-          <span class="err-msg">Wajib diunggah.</span>
-        </div>
-        <div class="field" data-field="filePhoto">
-          <label>Upload Pas Foto 3x4 Background Merah <span class="req">*</span></label>
-          <label class="file-drop" id="dropPhoto">
-            <span class="ficon">🖼️</span>
-            <span class="ftext" id="textPhoto"><b>Pilih file JPG/PNG</b>Maks. 2MB</span>
-            <input type="file" accept="image/*" id="filePhoto">
-          </label>
-          <span class="err-msg">Wajib diunggah.</span>
-        </div>
-      </div>
+      <div class="grid" id="berkasChecklist"></div>
     </section>
 
     <!-- BAGIAN 6 -->
@@ -676,6 +627,189 @@ const form = document.getElementById('mainForm');
 const DRAFT_KEY = 'draft:pengajuan-kepegawaian';
 let draftTimer = null;
 
+/* ---------- syarat pengajuan per jenis (sesuai Syarat Kenaikan Pangkat & Pencantuman Gelar ASN) ---------- */
+const SYARAT = {
+  'Kenaikan Pangkat Reguler': {
+    desc: 'Syarat berkas mengikuti kategori jabatan Anda saat pengusulan — pilih salah satu di bawah.',
+    kategori: {
+      'Reguler': [
+        'Foto Copy SK CPNS dan PNS (khusus untuk kenaikan pangkat pertama kali) dilegalisir',
+        'Foto Copy SK Pangkat Terakhir dilegalisir',
+        'ASLI/Foto Copy Sah SKP 2 tahun terakhir',
+        'Foto Copy Sertifikat Ujian Dinas Tk. I (yang akan naik pangkat dari III/d ke IV/a) dilegalisir',
+        'Foto Copy SK Pindah (bila ada) dilegalisir',
+        'Foto Copy Peninjauan Masa Kerja dan Pencantuman Gelar (bila ada)',
+        'Surat Keterangan Bebas Temuan dari Inspektorat Provinsi Sulawesi Barat',
+        'Surat Keterangan Bebas Narkotika dari BNN Provinsi Sulawesi Barat atau RSUD',
+        'Melampirkan SK Jabatan Terakhir Atasan Langsung yang dilegalisir',
+        'Meremajakan Jabatan berdasarkan Jabatan saat Pengusulan Berkas Kenaikan Pangkat',
+        'Surat Pengantar dari OPD'
+      ],
+      'Jabatan Struktural': [
+        'Foto Copy SK Pangkat Terakhir dilegalisir',
+        'Foto Copy SK Jabatan / Pernyataan Pelantikan (mulai dari SK Jabatan yang tertulis pada pangkat terakhir sampai sekarang) dilegalisir',
+        'Sertifikat Ujian Dinas Tk. I bagi PNS yang memiliki Pendidikan S.1 (khusus untuk pejabat administrator yang akan naik pangkat dari III/d ke IV/a) dilegalisir',
+        'Foto Copy SK Pindah (bila ada) dilegalisir',
+        'Foto Copy Peninjauan Masa Kerja dan Pencantuman Gelar (bila ada)',
+        'Surat Keterangan Bebas Temuan dari Inspektorat Provinsi Sulawesi Barat',
+        'Surat Keterangan Bebas Narkotika dari BNN Provinsi Sulawesi Barat atau RSUD',
+        'ASLI/Foto Copy Sah SKP 2 tahun terakhir',
+        'Melampirkan SK Jabatan Terakhir Atasan Langsung yang dilegalisir',
+        'Melampirkan Surat Keterangan Tidak Terdampak Penyetaraan dari Ortala (bagi pejabat eselon IV)',
+        'SK Pemberhentian dari Jabatan Fungsional (bagi yang pernah menjabat dalam jabatan fungsional)',
+        'Surat Pengantar dari OPD'
+      ],
+      'Jabatan Fungsional Tertentu': [
+        'Foto Copy SK CPNS dilegalisir',
+        'Foto Copy SK PNS dilegalisir',
+        'Foto Copy SK Pangkat Terakhir dilegalisir',
+        'ASLI Penetapan Angka Kredit (PAK), mulai dari PAK yang tertera pada SK Pengangkatan/Pangkat Terakhir sampai pada PAK Terakhir',
+        'Foto Copy SK Pengangkatan dalam Jabatan (Pertama, Kembali, Perpindahan Jabatan, Inpassing) dilegalisir',
+        'Foto Copy SK Kenaikan Jabatan (khusus untuk naik jenjang jabatan) dilegalisir',
+        'Foto Copy Sertifikat Uji Kompetensi untuk kenaikan jenjang (jika dipersyaratkan) dilegalisir',
+        'Foto Copy SK Pindah (bila ada) dilegalisir',
+        'Foto Copy Peninjauan Masa Kerja dan Pencantuman Gelar (bila ada)',
+        'Surat Keterangan Bebas Temuan dari Inspektorat Provinsi Sulawesi Barat',
+        'Surat Keterangan Bebas Narkotika dari BNN Provinsi Sulawesi Barat atau RSUD',
+        'Melampirkan Tugas / Izin belajar (bagi yang selesai mengikuti peningkatan pendidikan) dilegalisir',
+        'Meremajakan Jabatan berdasarkan Jabatan saat Pengusulan Berkas Kenaikan Pangkat',
+        'ASLI/Foto Copy Sah SKP 2 tahun terakhir serta SKP bulan berjalan apabila telah mengklaim Angka Kredit',
+        'Melampirkan SK Jabatan Terakhir Atasan Langsung yang dilegalisir',
+        'Surat Pengantar dari OPD'
+      ]
+    }
+  },
+  'Kenaikan Pangkat Penyesuaian Ijazah': {
+    desc: 'Pengajuan ini menggunakan syarat Pencantuman Gelar — pilih kategori jabatan Anda di bawah.',
+    kategori: {
+      'Reguler dan Struktural': [
+        'Foto copy dan dilegalisir SK CPNS dan PNS (Wajib)',
+        'Foto copy dan dilegalisir SK Pangkat Terakhir (bagi yang memiliki)',
+        'Foto copy dan dilegalisir SK Tugas Belajar (bagi yang memiliki)',
+        'Dokumen Surat Keterangan Memiliki Ijazah / Surat Keterangan Sedang Menyelesaikan Tugas Akhir (bagi yang memiliki)',
+        'Dokumen SK Penyetaraan Ijazah bagi Lulusan Luar Negeri (bagi yang memiliki)',
+        'Scan Ijazah Terakhir dan Transkrip Nilai (Asli & Wajib)',
+        'Sertifikat Akreditasi Jurusan (bagi yang memiliki)',
+        'Surat Keterangan Pengembalian dari Kampus (bagi yang memiliki)',
+        'Melampirkan bukti terdaftar pada PDPT (Pangkalan Data Perguruan Tinggi) melalui pddikti.kemdikbud.go.id — gunakan tombol Print Screen',
+        'SPTJM Pencantuman Gelar (Wajib)',
+        'Surat Pengantar dari OPD'
+      ],
+      'Jabatan Fungsional Tertentu': [
+        'Foto copy dan dilegalisir SK CPNS dan PNS (Wajib)',
+        'Foto copy dan dilegalisir SK Pangkat Terakhir (bagi yang memiliki)',
+        'Foto copy dan dilegalisir SK Tugas Belajar (bagi yang memiliki)',
+        'Dokumen Surat Keterangan Memiliki Ijazah / Surat Keterangan Sedang Menyelesaikan Tugas Akhir (bagi yang memiliki)',
+        'Dokumen SK Penyetaraan Ijazah bagi Lulusan Luar Negeri (bagi yang memiliki)',
+        'Scan Ijazah Terakhir dan Transkrip Nilai (Asli & Wajib)',
+        'Sertifikat Akreditasi Jurusan (bagi yang memiliki)',
+        'Surat Keterangan Pengembalian dari Kampus (bagi yang memiliki)',
+        'SK Jabatan Fungsional Pengangkatan dan Pemberhentian',
+        'ASLI Penetapan Angka Kredit (PAK), mulai dari PAK yang tertera pada SK Pengangkatan/Pangkat Terakhir sampai pada PAK Terakhir',
+        'Melampirkan bukti terdaftar pada PDPT (Pangkalan Data Perguruan Tinggi) melalui pddikti.kemdikbud.go.id — gunakan tombol Print Screen',
+        'SPTJM Pencantuman Gelar (Wajib)',
+        'Surat Pengantar dari OPD'
+      ]
+    }
+  },
+  'Kenaikan Gaji Berkala - KGB': {
+    desc: 'Penyesuaian gaji berkala rutin.',
+    syarat: [
+      'Telah melewati masa kerja 2 tahun sejak KGB atau kenaikan pangkat terakhir',
+      'SK KGB terakhir sebagai dasar perhitungan',
+      'SKP tahun berjalan bernilai baik',
+      'Tidak sedang menjalani hukuman disiplin'
+    ]
+  }
+};
+
+/* ---------- berkas wajib upload per jenis + kategori (semua di-upload lewat formulir ini) ---------- */
+const BERKAS_UMUM = [
+  {id:'filePhoto', label:'Pas Foto 3x4 Background Merah', accept:'image', required:true}
+];
+
+const BERKAS_MAP = {
+  'Kenaikan Pangkat Reguler': { kategori: {
+    'Reguler': [
+      {id:'skCpnsPns', label:'SK CPNS dan PNS (khusus kenaikan pangkat pertama kali)', accept:'pdf', required:false},
+      {id:'skPangkatTerakhir', label:'SK Pangkat Terakhir', accept:'pdf', required:true},
+      {id:'skp2Tahun', label:'SKP 2 Tahun Terakhir (Asli/Foto Copy Sah)', accept:'pdf', required:true},
+      {id:'sertifikatUjianDinas', label:'Sertifikat Ujian Dinas Tk. I (naik pangkat dari III/d ke IV/a)', accept:'pdf', required:false},
+      {id:'skPindah', label:'SK Pindah', accept:'pdf', required:false},
+      {id:'peninjauanMasaKerja', label:'Peninjauan Masa Kerja & Pencantuman Gelar', accept:'pdf', required:false},
+      {id:'suratBebasTemuan', label:'Surat Keterangan Bebas Temuan (Inspektorat Prov. Sulbar)', accept:'pdf', required:true},
+      {id:'suratBebasNarkotika', label:'Surat Keterangan Bebas Narkotika (BNN Prov. Sulbar/RSUD)', accept:'pdf', required:true},
+      {id:'skJabatanAtasan', label:'SK Jabatan Terakhir Atasan Langsung', accept:'pdf', required:true},
+      {id:'suratPengantarOpd', label:'Surat Pengantar dari OPD', accept:'pdf', required:true}
+    ],
+    'Jabatan Struktural': [
+      {id:'skPangkatTerakhir', label:'SK Pangkat Terakhir', accept:'pdf', required:true},
+      {id:'skJabatanPelantikan', label:'SK Jabatan / Pernyataan Pelantikan (dari SK pada pangkat terakhir s.d. sekarang)', accept:'pdf', required:true},
+      {id:'sertifikatUjianDinas', label:'Sertifikat Ujian Dinas Tk. I bagi Pendidikan S.1 (administrator naik III/d ke IV/a)', accept:'pdf', required:false},
+      {id:'skPindah', label:'SK Pindah', accept:'pdf', required:false},
+      {id:'peninjauanMasaKerja', label:'Peninjauan Masa Kerja & Pencantuman Gelar', accept:'pdf', required:false},
+      {id:'suratBebasTemuan', label:'Surat Keterangan Bebas Temuan (Inspektorat Prov. Sulbar)', accept:'pdf', required:true},
+      {id:'suratBebasNarkotika', label:'Surat Keterangan Bebas Narkotika (BNN Prov. Sulbar/RSUD)', accept:'pdf', required:true},
+      {id:'skp2Tahun', label:'SKP 2 Tahun Terakhir (Asli/Foto Copy Sah)', accept:'pdf', required:true},
+      {id:'skJabatanAtasan', label:'SK Jabatan Terakhir Atasan Langsung', accept:'pdf', required:true},
+      {id:'suratTidakTerdampak', label:'Surat Keterangan Tidak Terdampak Penyetaraan dari Ortala (eselon IV)', accept:'pdf', required:false},
+      {id:'skPemberhentianFungsional', label:'SK Pemberhentian dari Jabatan Fungsional', accept:'pdf', required:false},
+      {id:'suratPengantarOpd', label:'Surat Pengantar dari OPD', accept:'pdf', required:true}
+    ],
+    'Jabatan Fungsional Tertentu': [
+      {id:'skCpns', label:'SK CPNS', accept:'pdf', required:true},
+      {id:'skPns', label:'SK PNS', accept:'pdf', required:true},
+      {id:'skPangkatTerakhir', label:'SK Pangkat Terakhir', accept:'pdf', required:true},
+      {id:'pakAsli', label:'Penetapan Angka Kredit (PAK) Asli, dari SK Pengangkatan/Pangkat Terakhir s.d. PAK Terakhir', accept:'pdf', required:true},
+      {id:'skPengangkatanJabatan', label:'SK Pengangkatan dalam Jabatan (Pertama/Kembali/Perpindahan/Inpassing)', accept:'pdf', required:true},
+      {id:'skKenaikanJabatan', label:'SK Kenaikan Jabatan (khusus naik jenjang jabatan)', accept:'pdf', required:false},
+      {id:'sertifikatUjiKompetensi', label:'Sertifikat Uji Kompetensi untuk kenaikan jenjang (jika dipersyaratkan)', accept:'pdf', required:false},
+      {id:'skPindah', label:'SK Pindah', accept:'pdf', required:false},
+      {id:'peninjauanMasaKerja', label:'Peninjauan Masa Kerja & Pencantuman Gelar', accept:'pdf', required:false},
+      {id:'suratBebasTemuan', label:'Surat Keterangan Bebas Temuan (Inspektorat Prov. Sulbar)', accept:'pdf', required:true},
+      {id:'suratBebasNarkotika', label:'Surat Keterangan Bebas Narkotika (BNN Prov. Sulbar/RSUD)', accept:'pdf', required:true},
+      {id:'suratTugasBelajarFungsional', label:'Tugas / Izin Belajar (bagi yang selesai peningkatan pendidikan)', accept:'pdf', required:false},
+      {id:'skp2TahunPak', label:'SKP 2 Tahun Terakhir + SKP Bulan Berjalan (jika telah klaim Angka Kredit)', accept:'pdf', required:true},
+      {id:'skJabatanAtasan', label:'SK Jabatan Terakhir Atasan Langsung', accept:'pdf', required:true},
+      {id:'suratPengantarOpd', label:'Surat Pengantar dari OPD', accept:'pdf', required:true}
+    ]
+  }},
+  'Kenaikan Pangkat Penyesuaian Ijazah': { kategori: {
+    'Reguler dan Struktural': [
+      {id:'skCpnsPnsGelar', label:'SK CPNS dan PNS', accept:'pdf', required:true},
+      {id:'skPangkatTerakhirGelar', label:'SK Pangkat Terakhir', accept:'pdf', required:false},
+      {id:'skTugasBelajar', label:'SK Tugas Belajar', accept:'pdf', required:false},
+      {id:'suratKetIjazah', label:'Surat Keterangan Memiliki Ijazah / Sedang Menyelesaikan Tugas Akhir', accept:'pdf', required:false},
+      {id:'skPenyetaraanIjazah', label:'SK Penyetaraan Ijazah bagi Lulusan Luar Negeri', accept:'pdf', required:false},
+      {id:'scanIjazahTranskrip', label:'Scan Ijazah Terakhir dan Transkrip Nilai (Asli)', accept:'pdf', required:true},
+      {id:'sertifikatAkreditasi', label:'Sertifikat Akreditasi Jurusan', accept:'pdf', required:false},
+      {id:'suratPengembalianKampus', label:'Surat Keterangan Pengembalian dari Kampus', accept:'pdf', required:false},
+      {id:'buktiPddikti', label:'Bukti Terdaftar di PDDIKTI (screenshot pddikti.kemdikbud.go.id)', accept:'image', required:true},
+      {id:'sptjmGelar', label:'SPTJM Pencantuman Gelar', accept:'pdf', required:true},
+      {id:'suratPengantarOpd', label:'Surat Pengantar dari OPD', accept:'pdf', required:true}
+    ],
+    'Jabatan Fungsional Tertentu': [
+      {id:'skCpnsPnsGelar', label:'SK CPNS dan PNS', accept:'pdf', required:true},
+      {id:'skPangkatTerakhirGelar', label:'SK Pangkat Terakhir', accept:'pdf', required:false},
+      {id:'skTugasBelajar', label:'SK Tugas Belajar', accept:'pdf', required:false},
+      {id:'suratKetIjazah', label:'Surat Keterangan Memiliki Ijazah / Sedang Menyelesaikan Tugas Akhir', accept:'pdf', required:false},
+      {id:'skPenyetaraanIjazah', label:'SK Penyetaraan Ijazah bagi Lulusan Luar Negeri', accept:'pdf', required:false},
+      {id:'scanIjazahTranskrip', label:'Scan Ijazah Terakhir dan Transkrip Nilai (Asli)', accept:'pdf', required:true},
+      {id:'sertifikatAkreditasi', label:'Sertifikat Akreditasi Jurusan', accept:'pdf', required:false},
+      {id:'suratPengembalianKampus', label:'Surat Keterangan Pengembalian dari Kampus', accept:'pdf', required:false},
+      {id:'skJabatanFungsionalPP', label:'SK Jabatan Fungsional Pengangkatan dan Pemberhentian', accept:'pdf', required:true},
+      {id:'pakAsli', label:'Penetapan Angka Kredit (PAK) Asli, dari SK Pengangkatan/Pangkat Terakhir s.d. PAK Terakhir', accept:'pdf', required:true},
+      {id:'buktiPddikti', label:'Bukti Terdaftar di PDDIKTI (screenshot pddikti.kemdikbud.go.id)', accept:'image', required:true},
+      {id:'sptjmGelar', label:'SPTJM Pencantuman Gelar', accept:'pdf', required:true},
+      {id:'suratPengantarOpd', label:'Surat Pengantar dari OPD', accept:'pdf', required:true}
+    ]
+  }},
+  'Kenaikan Gaji Berkala - KGB': { flat: [
+    {id:'fileKgb', label:'SK KGB Terakhir', accept:'pdf', required:true},
+    {id:'skpTahunBerjalanKgb', label:'SKP Tahun Berjalan', accept:'pdf', required:true}
+  ]}
+};
+
 /* ---------- side nav active state via scroll ---------- */
 const sections = ['bagian1','bagian2','bagian3','bagian4','bagian5','bagian6'];
 const navItems = document.querySelectorAll('.nav-item');
@@ -688,27 +822,144 @@ const io = new IntersectionObserver((entries)=>{
 },{rootMargin:'-20% 0px -70% 0px'});
 sections.forEach(id=>{ const el=document.getElementById(id); if(el) io.observe(el); });
 
-/* ---------- Bagian 3 -> Bagian 4 conditional logic ---------- */
+/* ---------- Bagian 3 -> Bagian 4 & 5 conditional logic ---------- */
 const jenisRadios = document.querySelectorAll('input[name="jenis"]');
-const pangkatFields = document.getElementById('pangkatFields');
-const kgbFields = document.getElementById('kgbFields');
+const pangkatMetaFields = document.getElementById('pangkatMetaFields');
+const kgbMetaFields = document.getElementById('kgbMetaFields');
 const bagian4Empty = document.getElementById('bagian4Empty');
+const syaratBox = document.getElementById('syaratBox');
+const berkasChecklist = document.getElementById('berkasChecklist');
+const berkasHint = document.getElementById('berkasHint');
+
+const fileData = {}; // id -> {name, type, size, base64}
+let currentKategori = null;
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function renderSyaratBox(val){
+  if(!val || !SYARAT[val]){
+    syaratBox.style.display = 'none';
+    syaratBox.innerHTML = '';
+    return;
+  }
+  const data = SYARAT[val];
+  let html = `
+    <div class="syarat-head">
+      <span class="syarat-icon">📋</span>
+      <div>
+        <strong>Syarat Pengajuan</strong>
+        <p>${escapeHtml(data.desc)}</p>
+      </div>
+    </div>`;
+
+  if(data.kategori){
+    const keys = Object.keys(data.kategori);
+    if(!currentKategori || !keys.includes(currentKategori)){
+      currentKategori = keys[0];
+    }
+    html += `<div class="kategori-pills">` + keys.map(k =>
+      `<button type="button" class="kategori-pill${k === currentKategori ? ' active' : ''}" data-k="${escapeHtml(k)}">${escapeHtml(k)}</button>`
+    ).join('') + `</div>`;
+    html += `<ul class="syarat-list">` + data.kategori[currentKategori].map(s => `<li>${escapeHtml(s)}</li>`).join('') + `</ul>`;
+  } else if(data.syarat){
+    html += `<ul class="syarat-list">` + data.syarat.map(s => `<li>${escapeHtml(s)}</li>`).join('') + `</ul>`;
+  }
+
+  syaratBox.innerHTML = html;
+  syaratBox.style.display = 'block';
+
+  syaratBox.querySelectorAll('.kategori-pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      currentKategori = btn.dataset.k;
+      renderSyaratBox(val);
+      renderBerkasChecklist(val);
+      queueSaveDraft();
+    });
+  });
+}
+
+function currentBerkasList(jenis){
+  const cfg = BERKAS_MAP[jenis];
+  if(!cfg) return [];
+  const list = cfg.kategori ? (cfg.kategori[currentKategori] || []) : (cfg.flat || []);
+  return [...list, ...BERKAS_UMUM];
+}
+
+function fileFieldHtml(item){
+  const accept = item.accept === 'image' ? 'image/*' : 'application/pdf';
+  const icon = item.accept === 'image' ? '🖼️' : '📄';
+  const existing = fileData[item.id];
+  return `
+    <div class="field" data-field="${item.id}">
+      <label>${escapeHtml(item.label)} ${item.required ? '<span class="req">*</span>' : '<span class="opt">(bila ada)</span>'}</label>
+      <label class="file-drop${existing ? ' file-ok' : ''}" id="drop_${item.id}">
+        <span class="ficon">${icon}</span>
+        <span class="ftext" id="text_${item.id}">${existing ? `<b>${escapeHtml(existing.name)}</b>${(existing.size/1024).toFixed(0)} KB — dipilih` : `<b>Pilih file ${item.accept === 'image' ? 'JPG/PNG' : 'PDF'}</b>Maks. 2MB`}</span>
+        <input type="file" accept="${accept}" id="file_${item.id}" data-fid="${item.id}">
+      </label>
+      <span class="err-msg">Wajib diunggah.</span>
+    </div>`;
+}
+
+function renderBerkasChecklist(jenis){
+  const list = currentBerkasList(jenis);
+  if(!jenis || list.length === 0){
+    berkasChecklist.innerHTML = '';
+    berkasHint.textContent = 'Pilih jenis pengajuan pada Bagian 3 (dan kategori jabatan bila diminta) untuk menampilkan daftar berkas yang wajib diunggah.';
+    return;
+  }
+  berkasHint.textContent = 'Berkas berikut wajib diunggah sesuai jenis dan kategori pengajuan Anda. Format PDF (foto boleh JPG/PNG), maksimal 2MB per berkas.';
+  berkasChecklist.innerHTML = list.map(fileFieldHtml).join('');
+
+  berkasChecklist.querySelectorAll('input[type=file]').forEach(input=>{
+    input.addEventListener('change', async ()=>{
+      const fid = input.dataset.fid;
+      const f = input.files[0];
+      if(!f) return;
+      if(f.size > 2*1024*1024){
+        alert('Ukuran file melebihi 2MB. Silakan kompres atau pilih file lain.');
+        input.value = '';
+        return;
+      }
+      const base64 = await new Promise((res,rej)=>{
+        const r = new FileReader();
+        r.onload = ()=>res(r.result);
+        r.onerror = rej;
+        r.readAsDataURL(f);
+      });
+      fileData[fid] = {name:f.name, type:f.type, size:f.size, base64};
+      const textEl = document.getElementById('text_'+fid);
+      const dropEl = document.getElementById('drop_'+fid);
+      textEl.innerHTML = `<b>${escapeHtml(f.name)}</b>${(f.size/1024).toFixed(0)} KB — dipilih`;
+      dropEl.classList.add('file-ok');
+      clearFieldError(fid);
+      queueSaveDraft();
+    });
+  });
+}
 
 function updateBagian4(){
   const val = form.querySelector('input[name="jenis"]:checked')?.value;
   document.querySelectorAll('#jenisGroup .choice').forEach(c=>{
     c.classList.toggle('selected', c.dataset.val === val);
   });
-  pangkatFields.style.display = 'none';
-  kgbFields.style.display = 'none';
+
+  pangkatMetaFields.style.display = 'none';
+  kgbMetaFields.style.display = 'none';
   bagian4Empty.style.display = 'none';
+
   if(val === 'Kenaikan Pangkat Reguler' || val === 'Kenaikan Pangkat Penyesuaian Ijazah'){
-    pangkatFields.style.display = 'block';
+    pangkatMetaFields.style.display = 'block';
   } else if(val === 'Kenaikan Gaji Berkala - KGB'){
-    kgbFields.style.display = 'block';
+    kgbMetaFields.style.display = 'block';
   } else {
     bagian4Empty.style.display = 'block';
   }
+
+  renderSyaratBox(val);
+  renderBerkasChecklist(val);
 }
 jenisRadios.forEach(r=>r.addEventListener('change', ()=>{ updateBagian4(); queueSaveDraft(); }));
 updateBagian4();
@@ -717,36 +968,6 @@ updateBagian4();
 ['nip18','nip16'].forEach(id=>{
   document.getElementById(id).addEventListener('input', e=>{
     e.target.value = e.target.value.replace(/\D/g,'');
-  });
-});
-
-/* ---------- file inputs: read to base64, size guard ---------- */
-const fileFields = ['fileSkp','fileIjazah','fileKgb','fileCpns','filePangkatSk','fileJabatanSk','filePhoto'];
-const fileData = {}; // id -> {name, type, size, base64}
-
-fileFields.forEach(id=>{
-  const input = document.getElementById(id);
-  const drop = document.getElementById('drop' + id.slice(4));
-  const textEl = document.getElementById('text' + id.slice(4));
-  input.addEventListener('change', async ()=>{
-    const f = input.files[0];
-    if(!f) return;
-    if(f.size > 2*1024*1024){
-      alert('Ukuran file melebihi 2MB. Silakan kompres atau pilih file lain.');
-      input.value = '';
-      return;
-    }
-    const base64 = await new Promise((res,rej)=>{
-      const r = new FileReader();
-      r.onload = ()=>res(r.result);
-      r.onerror = rej;
-      r.readAsDataURL(f);
-    });
-    fileData[id] = {name:f.name, type:f.type, size:f.size, base64};
-    textEl.innerHTML = `<b>${f.name}</b>${(f.size/1024).toFixed(0)} KB — dipilih`;
-    drop.classList.add('file-ok');
-    clearFieldError(id);
-    queueSaveDraft();
   });
 });
 
@@ -783,8 +1004,6 @@ function validate(){
     const reqP = {
       pangkatDiusulkan: ()=>document.getElementById('pangkatDiusulkan').value !== '',
       tmtDiusulkan: ()=>document.getElementById('tmtDiusulkan').value !== '',
-      fileSkp: ()=>!!fileData.fileSkp,
-      fileIjazah: ()=>!!fileData.fileIjazah,
     };
     for(const [id,fn] of Object.entries(reqP)){
       const good = fn();
@@ -794,7 +1013,6 @@ function validate(){
   } else if(jenis === 'Kenaikan Gaji Berkala - KGB'){
     const reqK = {
       tmtKgb: ()=>document.getElementById('tmtKgb').value !== '',
-      fileKgb: ()=>!!fileData.fileKgb,
     };
     for(const [id,fn] of Object.entries(reqK)){
       const good = fn();
@@ -803,16 +1021,14 @@ function validate(){
     }
   }
 
-  const reqAll5 = {
-    fileCpns: ()=>!!fileData.fileCpns,
-    filePangkatSk: ()=>!!fileData.filePangkatSk,
-    fileJabatanSk: ()=>!!fileData.fileJabatanSk,
-    filePhoto: ()=>!!fileData.filePhoto,
-  };
-  for(const [id,fn] of Object.entries(reqAll5)){
-    const good = fn();
-    setFieldError(id, !good);
-    if(!good) ok = false;
+  if(jenis){
+    currentBerkasList(jenis).forEach(item=>{
+      if(item.required){
+        const good = !!fileData[item.id];
+        setFieldError(item.id, !good);
+        if(!good) ok = false;
+      }
+    });
   }
 
   const pernyataanErr = document.getElementById('pernyataanErr');
@@ -838,11 +1054,10 @@ function collectFormValues(){
     jenis: form.querySelector('input[name="jenis"]:checked')?.value || '',
     pangkatDiusulkan: document.getElementById('pangkatDiusulkan').value,
     tmtDiusulkan: document.getElementById('tmtDiusulkan').value,
-    jenjangIjazah: document.getElementById('jenjangIjazah').value,
-    tglIjazah: document.getElementById('tglIjazah').value,
     tmtKgb: document.getElementById('tmtKgb').value,
     tglSkKgb: document.getElementById('tglSkKgb').value,
     pernyataan: document.getElementById('pernyataan').checked,
+    kategoriJabatan: currentKategori,
   };
 }
 
@@ -863,11 +1078,10 @@ function applyFormValues(v){
   }
   document.getElementById('pangkatDiusulkan').value = v.pangkatDiusulkan||'';
   document.getElementById('tmtDiusulkan').value = v.tmtDiusulkan||'';
-  document.getElementById('jenjangIjazah').value = v.jenjangIjazah||'';
-  document.getElementById('tglIjazah').value = v.tglIjazah||'';
   document.getElementById('tmtKgb').value = v.tmtKgb||'';
   document.getElementById('tglSkKgb').value = v.tglSkKgb||'';
   document.getElementById('pernyataan').checked = !!v.pernyataan;
+  if(v.kategoriJabatan) currentKategori = v.kategoriJabatan;
   updateBagian4();
 }
 
@@ -909,10 +1123,7 @@ function clearDraft(){
   }catch(err){}
   form.reset();
   Object.keys(fileData).forEach(k=>delete fileData[k]);
-  fileFields.forEach(id=>{
-    document.getElementById('text'+id.slice(4)).innerHTML = '<b>Pilih file PDF</b>Maks. 2MB';
-    document.getElementById('drop'+id.slice(4)).classList.remove('file-ok');
-  });
+  currentKategori = null;
   updateBagian4();
   document.getElementById('saveNote').textContent = 'Draf dihapus';
 }
@@ -1016,10 +1227,7 @@ function resetForm(){
   document.getElementById('receiptWrap').style.display = 'none';
   form.reset();
   Object.keys(fileData).forEach(k=>delete fileData[k]);
-  fileFields.forEach(id=>{
-    document.getElementById('text'+id.slice(4)).innerHTML = '<b>Pilih file PDF</b>Maks. 2MB';
-    document.getElementById('drop'+id.slice(4)).classList.remove('file-ok');
-  });
+  currentKategori = null;
   document.querySelectorAll('.field.error').forEach(f=>f.classList.remove('error'));
   updateBagian4();
   document.getElementById('submitBtn').disabled = false;
@@ -1076,9 +1284,6 @@ function openHistory(){
 function closeHistory(){
   document.getElementById('drawerBackdrop').classList.remove('open');
   document.getElementById('drawer').classList.remove('open');
-}
-function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 </script>
 </body>
