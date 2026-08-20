@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Verifikasi — Bidang Kepegawaian</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1C3D5A; --navy-deep:#12283D; --paper:#F7F4EC; --paper-dim:#EFEAE0;
+    --card:#FFFFFF; --gold:#B08D2B; --gold-soft:#E8DCB8; --brick:#A23B2E; --green:#3F6B4F;
+    --amber:#8A6A10; --ink:#20262D; --ink-soft:#5B6570; --line:#DCD5C4; --radius:10px;
+    --serif:"Source Serif 4", Georgia, serif; --sans:"Plus Jakarta Sans", system-ui, sans-serif;
+    --mono:"JetBrains Mono", ui-monospace, monospace;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); line-height:1.5;}
+
+  .masthead{
+    background:linear-gradient(180deg,var(--navy) 0%, var(--navy-deep) 100%);
+    color:#F2EFE6; padding:20px 24px; border-bottom:4px solid var(--gold);
+  }
+  .masthead-inner{max-width:1180px; margin:0 auto; display:flex; align-items:center; gap:12px;}
+  .masthead-text .eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--gold-soft); margin:0 0 4px;}
+  .masthead-text h1{font-family:var(--serif); font-weight:700; font-size:20px; margin:0;}
+  .masthead-text p{margin:3px 0 0; font-size:12.5px; color:#C9D2DC;}
+  .masthead-actions{margin-left:auto; display:flex; gap:8px;}
+  .btn-ghost{
+    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.28); color:#F2EFE6;
+    font-family:var(--sans); font-size:12.5px; font-weight:600; padding:9px 14px; border-radius:8px; cursor:pointer;
+  }
+  .btn-ghost:hover{background:rgba(255,255,255,.16);}
+
+  .wrap{max-width:1180px; margin:0 auto; padding:24px;}
+
+  /* ----- login gate ----- */
+  .gate-wrap{display:flex; justify-content:center; padding:60px 20px;}
+  .gate-card{
+    max-width:400px; width:100%; background:var(--card); border:1px solid var(--line);
+    border-radius:14px; padding:32px 28px; text-align:center;
+  }
+  .gate-card .icon{width:44px; height:44px; margin:0 auto 14px; border-radius:10px; background:var(--navy); color:#fff; display:flex; align-items:center; justify-content:center; font-size:20px;}
+  .gate-card h2{font-family:var(--serif); font-size:19px; margin:0 0 6px; color:var(--navy-deep);}
+  .gate-card p{font-size:13px; color:var(--ink-soft); margin:0 0 18px;}
+  .gate-card input{
+    width:100%; font-family:var(--mono); font-size:14px; padding:11px 12px;
+    border:1px solid var(--line); border-radius:8px; outline:none; margin-bottom:10px; text-align:center;
+  }
+  .gate-card input:focus{border-color:var(--navy);}
+  .gate-err{font-size:12px; color:var(--brick); margin:0 0 10px; display:none;}
+  .btn-primary{
+    background:var(--navy); color:#fff; border:none; font-family:var(--sans); font-weight:700;
+    font-size:14px; padding:12px 20px; border-radius:8px; cursor:pointer; width:100%;
+  }
+  .btn-primary:hover{background:var(--navy-deep);}
+  .btn-primary:disabled{background:#A9B3BC; cursor:not-allowed;}
+  .gate-note{font-size:11px; color:var(--ink-soft); margin-top:14px;}
+
+  /* ----- toolbar ----- */
+  .toolbar{
+    display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:14px 16px; margin-bottom:16px;
+  }
+  .toolbar input[type=search]{
+    flex:1; min-width:180px; font-family:var(--sans); font-size:13.5px; padding:9px 11px;
+    border:1px solid var(--line); border-radius:7px; outline:none; background:#FCFBF8;
+  }
+  .toolbar input[type=search]:focus{border-color:var(--navy);}
+  .status-tabs{display:flex; gap:6px; flex-wrap:wrap;}
+  .status-tab{
+    font-family:var(--sans); font-size:12px; font-weight:600; padding:7px 12px;
+    border-radius:20px; border:1px solid var(--line); background:#fff; color:var(--ink-soft); cursor:pointer;
+  }
+  .status-tab.active{background:var(--navy); color:#fff; border-color:var(--navy);}
+  .btn-refresh{
+    background:var(--paper-dim); border:1px solid var(--line); color:var(--navy-deep);
+    font-family:var(--sans); font-size:12.5px; font-weight:600; padding:9px 13px; border-radius:7px; cursor:pointer;
+  }
+  .btn-refresh:hover{border-color:var(--gold);}
+  .summary-bar{font-size:12px; color:var(--ink-soft); margin-bottom:12px; font-family:var(--mono);}
+
+  /* ----- cards list ----- */
+  .sub-card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:18px 20px; margin-bottom:12px; position:relative;
+  }
+  .sub-card::before{content:""; position:absolute; left:0; top:14px; bottom:14px; width:3px; border-radius:2px; background:var(--gold);}
+  .sub-card.status-verified::before{background:var(--green);}
+  .sub-card.status-rejected::before{background:var(--brick);}
+  .sub-head{display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:10px;}
+  .sub-head h3{font-family:var(--serif); font-size:16.5px; margin:0; color:var(--navy-deep);}
+  .sub-head .meta{font-size:12px; color:var(--ink-soft); margin-top:3px; font-family:var(--mono);}
+  .badge{
+    font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px;
+    background:#FCF3DC; color:var(--amber); white-space:nowrap; height:fit-content;
+  }
+  .badge.verified{background:#E7F0EA; color:var(--green);}
+  .badge.rejected{background:#FBEAE7; color:var(--brick);}
+  .sub-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:8px 16px; font-size:12.5px; margin-bottom:12px;}
+  .sub-grid div b{display:block; color:var(--ink-soft); font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; margin-bottom:2px; font-weight:600;}
+  .sub-links{font-size:12px; margin-bottom:12px;}
+  .sub-links a{color:var(--navy); text-decoration:underline;}
+  .sub-links summary{cursor:pointer; font-weight:600; color:var(--navy); font-size:12.5px;}
+  .verify-row{
+    display:flex; gap:8px; flex-wrap:wrap; align-items:flex-end;
+    border-top:1px dashed var(--line); padding-top:12px;
+  }
+  .verify-field{display:flex; flex-direction:column; gap:4px; flex:1; min-width:160px;}
+  .verify-field label{font-size:11px; font-weight:600; color:var(--navy-deep);}
+  .verify-field select, .verify-field input{
+    font-family:var(--sans); font-size:13px; padding:8px 9px; border:1px solid var(--line);
+    border-radius:6px; outline:none; background:#FCFBF8;
+  }
+  .verify-field.grow{flex:2;}
+  .btn-save{
+    background:var(--navy); color:#fff; border:none; font-family:var(--sans); font-weight:700;
+    font-size:13px; padding:9px 16px; border-radius:7px; cursor:pointer; white-space:nowrap;
+  }
+  .btn-save:hover{background:var(--navy-deep);}
+  .btn-save:disabled{background:#A9B3BC; cursor:not-allowed;}
+  .save-hint{font-size:11px; color:var(--green); margin-top:6px; display:none;}
+  .save-hint.err{color:var(--brick);}
+
+  .empty-state{font-size:13px; color:var(--ink-soft); text-align:center; padding:50px 10px;}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="masthead-text">
+      <p class="eyebrow">Bidang Kepegawaian · Dinas PUPR</p>
+      <h1>Panel Verifikasi Pengajuan</h1>
+      <p>Tinjau, verifikasi, atau tolak pengajuan kenaikan pangkat &amp; KGB yang masuk.</p>
+    </div>
+    <div class="masthead-actions" id="loggedInActions" style="display:none;">
+      <button class="btn-ghost" onclick="logout()" type="button">Keluar</button>
+    </div>
+  </div>
+</header>
+
+<!-- GATE: masuk dengan kode akses -->
+<div class="gate-wrap" id="gateWrap">
+  <div class="gate-card">
+    <div class="icon">🔐</div>
+    <h2>Masuk Panel Verifikasi</h2>
+    <p>Masukkan kode akses staf kepegawaian untuk melanjutkan.</p>
+    <input type="password" id="tokenInput" placeholder="Kode akses" autocomplete="off">
+    <p class="gate-err" id="gateErr">Kode akses salah atau URL Apps Script belum diatur.</p>
+    <button class="btn-primary" id="loginBtn" onclick="doLogin()">Masuk</button>
+    <p class="gate-note">Kode akses diberikan oleh pengelola sistem (ADMIN_TOKEN pada Apps Script). Jangan bagikan kode ini ke pegawai umum.</p>
+  </div>
+</div>
+
+<!-- MAIN: daftar pengajuan -->
+<div class="wrap" id="mainWrap" style="display:none;">
+  <div class="toolbar">
+    <input type="search" id="searchInput" placeholder="Cari nama, NIP, atau kode referensi…">
+    <div class="status-tabs" id="statusTabs">
+      <button class="status-tab active" data-f="semua" type="button">Semua</button>
+      <button class="status-tab" data-f="menunggu" type="button">Menunggu Verifikasi</button>
+      <button class="status-tab" data-f="verified" type="button">Diverifikasi</button>
+      <button class="status-tab" data-f="rejected" type="button">Ditolak</button>
+    </div>
+    <button class="btn-refresh" onclick="loadSubmissions()" type="button">↻ Muat Ulang</button>
+  </div>
+
+  <div class="summary-bar" id="summaryBar"></div>
+  <div id="listBody"><div class="empty-state">Memuat data…</div></div>
+</div>
+
+<script>
+/* ============================================================
+   KONFIGURASI
+   Tempel URL Web App Apps Script yang SAMA dengan yang dipakai
+   formulir.html — panel ini pakai backend yang sama.
+============================================================ */
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx4Aov8oFtwXRvMqg_bfNIdQTguT0TikEHWTNMhN4wgW8I0sdcqXp5oS-7qj7OC8t2ECA/exec';
+
+const TOKEN_KEY = 'admin:kepegawaian:token';
+const NAME_KEY = 'admin:kepegawaian:name';
+
+const STATUS_OPTIONS = [
+  'Diterima - Menunggu Verifikasi',
+  'Sedang Diverifikasi',
+  'Diverifikasi - Berkas Lengkap',
+  'Diteruskan ke BKD',
+  'Ditolak - Berkas Tidak Lengkap',
+  'Selesai',
+];
+
+let allRows = [];
+let activeFilter = 'semua';
+
+function escapeHtml(s){
+  return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function statusClass(status){
+  const s = (status||'').toLowerCase();
+  if(s.includes('ditolak')) return 'rejected';
+  if(s.includes('verifikasi') && !s.includes('menunggu')) return 'verified';
+  if(s.includes('diteruskan') || s.includes('selesai')) return 'verified';
+  return '';
+}
+
+/* ---------- gate / login ---------- */
+function doLogin(){
+  const token = document.getElementById('tokenInput').value.trim();
+  const err = document.getElementById('gateErr');
+  if(!APPS_SCRIPT_URL){
+    err.textContent = 'APPS_SCRIPT_URL belum diatur di file admin.html ini.';
+    err.style.display = 'block';
+    return;
+  }
+  if(!token){
+    err.textContent = 'Masukkan kode akses terlebih dahulu.';
+    err.style.display = 'block';
+    return;
+  }
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = 'Memeriksa…';
+  err.style.display = 'none';
+
+  fetch(APPS_SCRIPT_URL + '?action=list&token=' + encodeURIComponent(token))
+    .then(r => r.json())
+    .then(json => {
+      btn.disabled = false; btn.textContent = 'Masuk';
+      if(json.ok){
+        sessionStorage.setItem(TOKEN_KEY, token);
+        allRows = json.rows || [];
+        showMain();
+        renderList();
+      } else {
+        err.textContent = 'Kode akses salah, atau ADMIN_TOKEN belum diganti di Apps Script.';
+        err.style.display = 'block';
+      }
+    })
+    .catch(e => {
+      btn.disabled = false; btn.textContent = 'Masuk';
+      err.textContent = 'Gagal terhubung ke server: ' + e;
+      err.style.display = 'block';
+    });
+}
+
+function showMain(){
+  document.getElementById('gateWrap').style.display = 'none';
+  document.getElementById('mainWrap').style.display = 'block';
+  document.getElementById('loggedInActions').style.display = 'flex';
+}
+
+function logout(){
+  sessionStorage.removeItem(TOKEN_KEY);
+  document.getElementById('gateWrap').style.display = 'flex';
+  document.getElementById('mainWrap').style.display = 'none';
+  document.getElementById('loggedInActions').style.display = 'none';
+  document.getElementById('tokenInput').value = '';
+}
+
+function getToken(){ return sessionStorage.getItem(TOKEN_KEY) || ''; }
+
+/* ---------- load data ---------- */
+function loadSubmissions(){
+  const token = getToken();
+  if(!token) return;
+  document.getElementById('listBody').innerHTML = '<div class="empty-state">Memuat data…</div>';
+  fetch(APPS_SCRIPT_URL + '?action=list&token=' + encodeURIComponent(token))
+    .then(r => r.json())
+    .then(json => {
+      if(json.ok){
+        allRows = json.rows || [];
+        renderList();
+      } else {
+        document.getElementById('listBody').innerHTML = '<div class="empty-state">Gagal memuat: ' + escapeHtml(json.error || 'tidak diketahui') + '. Coba keluar dan masuk kembali.</div>';
+      }
+    })
+    .catch(e => {
+      document.getElementById('listBody').innerHTML = '<div class="empty-state">Gagal terhubung ke server: ' + escapeHtml(String(e)) + '</div>';
+    });
+}
+
+/* ---------- filter + search ---------- */
+document.getElementById('statusTabs').addEventListener('click', e=>{
+  const btn = e.target.closest('.status-tab');
+  if(!btn) return;
+  document.querySelectorAll('.status-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = btn.dataset.f;
+  renderList();
+});
+document.getElementById('searchInput').addEventListener('input', renderList);
+
+function matchesFilter(row){
+  const cls = statusClass(row['Status']);
+  if(activeFilter === 'semua') return true;
+  if(activeFilter === 'menunggu') return cls === '';
+  if(activeFilter === 'verified') return cls === 'verified';
+  if(activeFilter === 'rejected') return cls === 'rejected';
+  return true;
+}
+function matchesSearch(row, q){
+  if(!q) return true;
+  q = q.toLowerCase();
+  return ['Kode Referensi','Nama','NIP 18','NIP 16','Unit Kerja'].some(k =>
+    String(row[k]||'').toLowerCase().includes(q)
+  );
+}
+
+/* ---------- render ---------- */
+function renderList(){
+  const q = document.getElementById('searchInput').value.trim();
+  const filtered = allRows.filter(r => matchesFilter(r) && matchesSearch(r, q));
+
+  document.getElementById('summaryBar').textContent =
+    `${filtered.length} dari ${allRows.length} pengajuan ditampilkan`;
+
+  if(filtered.length === 0){
+    document.getElementById('listBody').innerHTML = '<div class="empty-state">Tidak ada pengajuan yang cocok.</div>';
+    return;
+  }
+
+  document.getElementById('listBody').innerHTML = filtered.map(rowToCard).join('');
+
+  filtered.forEach(row=>{
+    const id = row['Kode Referensi'];
+    const btn = document.getElementById('save_' + cssId(id));
+    if(btn) btn.addEventListener('click', () => saveStatus(id));
+  });
+}
+
+function cssId(id){ return String(id).replace(/[^a-zA-Z0-9_-]/g,'_'); }
+
+function rowToCard(row){
+  const id = row['Kode Referensi'];
+  const cid = cssId(id);
+  const cls = statusClass(row['Status']);
+  const links = String(row['Link Berkas']||'').split('\n').filter(Boolean);
+  const currentStatus = row['Status'] || STATUS_OPTIONS[0];
+
+  return `
+    <div class="sub-card ${cls ? 'status-'+cls : ''}">
+      <div class="sub-head">
+        <div>
+          <h3>${escapeHtml(row['Nama'])}</h3>
+          <div class="meta">${escapeHtml(id)} · ${escapeHtml(formatDate(row['Waktu Kirim']))}</div>
+        </div>
+        <span class="badge ${cls}">${escapeHtml(currentStatus)}</span>
+      </div>
+
+      <div class="sub-grid">
+        <div><b>NIP 18</b>${escapeHtml(row['NIP 18'])}</div>
+        <div><b>Unit Kerja</b>${escapeHtml(row['Unit Kerja'])}</div>
+        <div><b>Jabatan</b>${escapeHtml(row['Jabatan'])}</div>
+        <div><b>Golongan</b>${escapeHtml(row['Golongan Saat Ini'])}</div>
+        <div><b>Jenis Pengajuan</b>${escapeHtml(row['Jenis Pengajuan'])}</div>
+        <div><b>No HP</b>${escapeHtml(row['No HP'])}</div>
+        ${row['Pangkat Diusulkan'] ? `<div><b>Pangkat Diusulkan</b>${escapeHtml(row['Pangkat Diusulkan'])}</div>` : ''}
+        ${row['TMT KGB Terakhir'] ? `<div><b>TMT KGB Terakhir</b>${escapeHtml(row['TMT KGB Terakhir'])}</div>` : ''}
+        ${row['Diverifikasi Oleh'] ? `<div><b>Diverifikasi Oleh</b>${escapeHtml(row['Diverifikasi Oleh'])}</div>` : ''}
+        ${row['Waktu Verifikasi'] ? `<div><b>Waktu Verifikasi</b>${escapeHtml(formatDate(row['Waktu Verifikasi']))}</div>` : ''}
+      </div>
+
+      ${links.length ? `
+      <details class="sub-links">
+        <summary>Berkas terlampir (${links.length})</summary>
+        <div style="margin-top:8px; display:flex; flex-direction:column; gap:4px;">
+          ${links.map(l=>{
+            const idx = l.indexOf(':');
+            const label = idx>-1 ? l.slice(0,idx) : l;
+            const url = idx>-1 ? l.slice(idx+1).trim() : '';
+            return url.startsWith('http') ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(label)}</a>` : escapeHtml(l);
+          }).join('')}
+        </div>
+      </details>` : ''}
+
+      <div class="verify-row">
+        <div class="verify-field">
+          <label>Ubah Status</label>
+          <select id="status_${cid}">
+            ${STATUS_OPTIONS.map(s=>`<option value="${escapeHtml(s)}" ${s===currentStatus?'selected':''}>${escapeHtml(s)}</option>`).join('')}
+          </select>
+        </div>
+        <div class="verify-field grow">
+          <label>Catatan (opsional, akan dikirim ke email pegawai)</label>
+          <input type="text" id="catatan_${cid}" placeholder="cth. Berkas SK Pindah belum dilampirkan" value="${escapeHtml(row['Catatan Verifikasi']||'')}">
+        </div>
+        <div class="verify-field">
+          <label>Nama Verifikator</label>
+          <input type="text" id="verifier_${cid}" placeholder="Nama Anda" value="${escapeHtml(sessionStorage.getItem(NAME_KEY)||'')}">
+        </div>
+        <button class="btn-save" id="save_${cid}" type="button">Simpan</button>
+      </div>
+      <div class="save-hint" id="hint_${cid}"></div>
+    </div>
+  `;
+}
+
+function formatDate(iso){
+  if(!iso) return '-';
+  const d = new Date(iso);
+  if(isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}) + ' ' + d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+}
+
+/* ---------- save status ---------- */
+function saveStatus(id){
+  const cid = cssId(id);
+  const status = document.getElementById('status_'+cid).value;
+  const catatan = document.getElementById('catatan_'+cid).value.trim();
+  const verifiedBy = document.getElementById('verifier_'+cid).value.trim();
+  const btn = document.getElementById('save_'+cid);
+  const hint = document.getElementById('hint_'+cid);
+
+  if(verifiedBy) sessionStorage.setItem(NAME_KEY, verifiedBy);
+
+  btn.disabled = true; btn.textContent = 'Menyimpan…';
+  hint.style.display = 'none'; hint.classList.remove('err');
+
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    headers: {'Content-Type': 'text/plain;charset=utf-8'},
+    body: JSON.stringify({ action:'updateStatus', token:getToken(), id, status, catatan, verifiedBy }),
+  })
+    .then(r => r.json())
+    .then(json => {
+      btn.disabled = false; btn.textContent = 'Simpan';
+      if(json.ok){
+        hint.textContent = 'Tersimpan. Notifikasi email terkirim ke pegawai (bila alamat email tersedia).';
+        hint.style.display = 'block';
+        loadSubmissions();
+      } else {
+        hint.textContent = 'Gagal menyimpan: ' + (json.error || 'tidak diketahui');
+        hint.classList.add('err');
+        hint.style.display = 'block';
+      }
+    })
+    .catch(e => {
+      btn.disabled = false; btn.textContent = 'Simpan';
+      hint.textContent = 'Gagal terhubung ke server: ' + e;
+      hint.classList.add('err');
+      hint.style.display = 'block';
+    });
+}
+
+/* ---------- auto-login jika token tersimpan di sesi ini ---------- */
+(function init(){
+  const token = getToken();
+  if(token && APPS_SCRIPT_URL){
+    showMain();
+    loadSubmissions();
+  }
+})();
+</script>
+</body>
+</html>
