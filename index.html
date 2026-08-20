@@ -3,1285 +3,456 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Formulir Pengajuan Kepegawaian — Dinas PUPR</title>
+<title>Panel Verifikasi — Bidang Kepegawaian</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --navy:#1C3D5A;
-    --navy-deep:#12283D;
-    --paper:#F7F4EC;
-    --paper-dim:#EFEAE0;
-    --card:#FFFFFF;
-    --gold:#B08D2B;
-    --gold-soft:#E8DCB8;
-    --brick:#A23B2E;
-    --green:#3F6B4F;
-    --ink:#20262D;
-    --ink-soft:#5B6570;
-    --line:#DCD5C4;
-    --radius:10px;
-    --serif:"Source Serif 4", Georgia, serif;
-    --sans:"Plus Jakarta Sans", system-ui, sans-serif;
+    --navy:#1C3D5A; --navy-deep:#12283D; --paper:#F7F4EC; --paper-dim:#EFEAE0;
+    --card:#FFFFFF; --gold:#B08D2B; --gold-soft:#E8DCB8; --brick:#A23B2E; --green:#3F6B4F;
+    --amber:#8A6A10; --ink:#20262D; --ink-soft:#5B6570; --line:#DCD5C4; --radius:10px;
+    --serif:"Source Serif 4", Georgia, serif; --sans:"Plus Jakarta Sans", system-ui, sans-serif;
     --mono:"JetBrains Mono", ui-monospace, monospace;
   }
   *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{
-    margin:0;
-    background:var(--paper);
-    color:var(--ink);
-    font-family:var(--sans);
-    line-height:1.5;
-    -webkit-font-smoothing:antialiased;
-  }
-  a{color:inherit;}
+  body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); line-height:1.5;}
 
-  /* ===== Masthead ===== */
   .masthead{
     background:linear-gradient(180deg,var(--navy) 0%, var(--navy-deep) 100%);
-    color:#F2EFE6;
-    padding:22px 24px 26px;
-    position:relative;
-    overflow:hidden;
-    border-bottom:4px solid var(--gold);
+    color:#F2EFE6; padding:20px 24px; border-bottom:4px solid var(--gold);
   }
-  .masthead::after{
-    content:"";
-    position:absolute; inset:0;
-    background-image:radial-gradient(circle at 85% -10%, rgba(184,141,43,.18), transparent 55%);
-    pointer-events:none;
-  }
-  .masthead-inner{
-    max-width:1180px; margin:0 auto;
-    display:flex; align-items:center; gap:16px;
-    position:relative; z-index:1;
-  }
-  .seal{
-    flex:none; width:52px;height:52px;
-  }
-  .masthead-text .eyebrow{
-    font-family:var(--mono);
-    font-size:11px; letter-spacing:.14em; text-transform:uppercase;
-    color:var(--gold-soft); margin:0 0 4px;
-  }
-  .masthead-text h1{
-    font-family:var(--serif); font-weight:700;
-    font-size:22px; margin:0; letter-spacing:.01em;
-  }
-  .masthead-text p{
-    margin:3px 0 0; font-size:13px; color:#C9D2DC;
-  }
-  .masthead-actions{
-    margin-left:auto; display:flex; gap:8px; position:relative; z-index:1;
-  }
+  .masthead-inner{max-width:1180px; margin:0 auto; display:flex; align-items:center; gap:12px;}
+  .masthead-text .eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--gold-soft); margin:0 0 4px;}
+  .masthead-text h1{font-family:var(--serif); font-weight:700; font-size:20px; margin:0;}
+  .masthead-text p{margin:3px 0 0; font-size:12.5px; color:#C9D2DC;}
+  .masthead-actions{margin-left:auto; display:flex; gap:8px;}
   .btn-ghost{
-    background:rgba(255,255,255,.08);
-    border:1px solid rgba(255,255,255,.28);
-    color:#F2EFE6;
-    font-family:var(--sans); font-size:12.5px; font-weight:600;
-    padding:9px 14px; border-radius:8px; cursor:pointer;
-    transition:background .15s ease;
-    white-space:nowrap;
+    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.28); color:#F2EFE6;
+    font-family:var(--sans); font-size:12.5px; font-weight:600; padding:9px 14px; border-radius:8px; cursor:pointer;
   }
   .btn-ghost:hover{background:rgba(255,255,255,.16);}
 
-  /* ===== Layout ===== */
-  .layout{
-    max-width:1180px; margin:0 auto;
-    display:grid; grid-template-columns:220px 1fr;
-    gap:28px; padding:28px 24px 90px;
-    align-items:start;
-  }
-  @media (max-width:860px){
-    .layout{grid-template-columns:1fr; padding:16px 14px 90px;}
-  }
+  .wrap{max-width:1180px; margin:0 auto; padding:24px;}
 
-  /* ===== Side nav ===== */
-  .side-nav{
-    position:sticky; top:20px;
-    display:flex; flex-direction:column; gap:2px;
-    background:var(--card);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:10px;
+  /* ----- login gate ----- */
+  .gate-wrap{display:flex; justify-content:center; padding:60px 20px;}
+  .gate-card{
+    max-width:400px; width:100%; background:var(--card); border:1px solid var(--line);
+    border-radius:14px; padding:32px 28px; text-align:center;
   }
-  @media (max-width:860px){
-    .side-nav{
-      position:static;
-      flex-direction:row; overflow-x:auto;
-      gap:6px; padding:8px;
-    }
+  .gate-card .icon{width:44px; height:44px; margin:0 auto 14px; border-radius:10px; background:var(--navy); color:#fff; display:flex; align-items:center; justify-content:center; font-size:20px;}
+  .gate-card h2{font-family:var(--serif); font-size:19px; margin:0 0 6px; color:var(--navy-deep);}
+  .gate-card p{font-size:13px; color:var(--ink-soft); margin:0 0 18px;}
+  .gate-card input{
+    width:100%; font-family:var(--mono); font-size:14px; padding:11px 12px;
+    border:1px solid var(--line); border-radius:8px; outline:none; margin-bottom:10px; text-align:center;
   }
-  .nav-item{
-    display:flex; align-items:center; gap:9px;
-    padding:9px 10px; border-radius:7px;
-    font-size:13px; font-weight:600; color:var(--ink-soft);
-    text-decoration:none; cursor:pointer;
-    border:1px solid transparent;
-    white-space:nowrap;
-  }
-  .nav-item .dot{
-    flex:none; width:20px; height:20px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    font-family:var(--mono); font-size:10.5px; font-weight:600;
-    background:var(--paper-dim); color:var(--ink-soft);
-    border:1px solid var(--line);
-  }
-  .nav-item.active{background:var(--paper-dim); color:var(--navy); border-color:var(--line);}
-  .nav-item.active .dot{background:var(--navy); color:#fff; border-color:var(--navy);}
-  .nav-item.done .dot{background:var(--green); color:#fff; border-color:var(--green);}
-  .nav-item.done .dot::before{content:"✓";}
-  .nav-item.done .dot span{display:none;}
-
-  /* ===== Main column ===== */
-  .main-col{display:flex; flex-direction:column; gap:18px; min-width:0;}
-
-  .card{
-    background:var(--card);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:22px 24px 24px;
-    position:relative;
-  }
-  .card::before{
-    content:"";
-    position:absolute; left:0; top:16px; bottom:16px; width:3px;
-    background:var(--gold); border-radius:2px;
-  }
-  .card-head{margin-bottom:16px;}
-  .card-head .eyebrow{
-    font-family:var(--mono); font-size:11px; letter-spacing:.12em;
-    text-transform:uppercase; color:var(--gold); margin:0 0 4px; font-weight:600;
-  }
-  .card-head h2{
-    font-family:var(--serif); font-size:19px; margin:0; color:var(--navy-deep);
-  }
-  .card-head p.hint{margin:5px 0 0; font-size:12.5px; color:var(--ink-soft);}
-
-  .grid{display:grid; grid-template-columns:1fr 1fr; gap:14px 16px;}
-  .grid.single{grid-template-columns:1fr;}
-  @media (max-width:600px){.grid{grid-template-columns:1fr;}}
-  .field{display:flex; flex-direction:column; gap:6px;}
-  .field label{font-size:12.5px; font-weight:600; color:var(--navy-deep);}
-  .field label .req{color:var(--brick); margin-left:2px;}
-  .field label .opt{color:var(--ink-soft); font-weight:500; font-size:11px; margin-left:4px;}
-  .field .desc{font-size:11.5px; color:var(--ink-soft); margin-top:-2px;}
-  input[type=text], input[type=tel], input[type=email], input[type=date], select{
-    font-family:var(--sans); font-size:14px; color:var(--ink);
-    padding:10px 11px; border:1px solid var(--line); border-radius:7px;
-    background:#FCFBF8; outline:none; width:100%;
-    transition:border-color .15s ease, background .15s ease;
-  }
-  input:focus, select:focus{border-color:var(--navy); background:#fff;}
-  input.nip{font-family:var(--mono); letter-spacing:.03em;}
-  .field.error input, .field.error select{border-color:var(--brick); background:#FBF1EF;}
-  .field .err-msg{font-size:11.5px; color:var(--brick); display:none;}
-  .field.error .err-msg{display:block;}
-
-  /* radio / choice cards */
-  .choice-group{display:flex; flex-direction:column; gap:8px;}
-  .choice{
-    display:flex; align-items:flex-start; gap:10px;
-    border:1px solid var(--line); border-radius:8px;
-    padding:12px 13px; cursor:pointer;
-    transition:border-color .15s ease, background .15s ease;
-  }
-  .choice:hover{border-color:var(--gold);}
-  .choice input{margin-top:2px;}
-  .choice.selected{border-color:var(--navy); background:#F1F5F9;}
-  .choice .ctext strong{display:block; font-size:13.5px; color:var(--navy-deep);}
-  .choice .ctext span{font-size:12px; color:var(--ink-soft);}
-
-  /* syarat pengajuan box */
-  .syarat-box{
-    margin-top:14px;
-    background:#F1F5F9;
-    border:1px solid var(--line);
-    border-left:3px solid var(--navy);
-    border-radius:8px;
-    padding:14px 16px;
-    animation:syaratIn .18s ease;
-  }
-  @keyframes syaratIn{
-    from{opacity:0; transform:translateY(-4px);}
-    to{opacity:1; transform:translateY(0);}
-  }
-  .syarat-head{display:flex; gap:10px; align-items:flex-start; margin-bottom:10px;}
-  .syarat-icon{
-    flex:none; width:28px; height:28px; border-radius:7px;
-    background:var(--navy); color:#fff;
-    display:flex; align-items:center; justify-content:center; font-size:14px;
-  }
-  .syarat-head strong{font-size:13.5px; color:var(--navy-deep); display:block;}
-  .syarat-head p{margin:2px 0 0; font-size:12px; color:var(--ink-soft);}
-  .syarat-list{margin:0; padding-left:20px; display:flex; flex-direction:column; gap:6px;}
-  .syarat-list li{font-size:12.5px; color:var(--ink); line-height:1.5;}
-  .syarat-list li::marker{color:var(--gold);}
-  .syarat-note{font-size:11px; color:var(--ink-soft); font-style:italic; margin:10px 0 0;}
-  .kategori-pills{display:flex; gap:7px; flex-wrap:wrap; margin-bottom:12px;}
-  .kategori-pill{
-    font-family:var(--sans); font-size:11.5px; font-weight:600;
-    padding:7px 12px; border-radius:20px; border:1px solid var(--line);
-    background:#fff; color:var(--ink-soft); cursor:pointer;
-    transition:background .15s ease, color .15s ease, border-color .15s ease;
-  }
-  .kategori-pill:hover{border-color:var(--gold);}
-  .kategori-pill.active{background:var(--navy); color:#fff; border-color:var(--navy);}
-
-  /* file upload */
-  .file-drop{
-    border:1.5px dashed var(--line); border-radius:8px;
-    padding:14px; display:flex; align-items:center; gap:12px;
-    background:#FCFBF8; cursor:pointer;
-  }
-  .file-drop:hover{border-color:var(--gold);}
-  .file-drop .ficon{
-    flex:none; width:34px; height:34px; border-radius:7px;
-    background:var(--paper-dim); display:flex; align-items:center; justify-content:center;
-    font-size:15px; color:var(--navy);
-  }
-  .file-drop .ftext{font-size:12.5px; color:var(--ink-soft); min-width:0;}
-  .file-drop .ftext b{display:block; font-size:13px; color:var(--ink); word-break:break-all;}
-  .file-drop input[type=file]{display:none;}
-  .file-ok .ficon{background:var(--green); color:#fff;}
-
-  fieldset{border:none; margin:0; padding:0;}
-
-  .subsection{
-    margin-top:14px; padding-top:14px; border-top:1px dashed var(--line);
-  }
-  .subsection .sub-title{
-    font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
-    color:var(--navy); font-weight:600; margin:0 0 12px;
-  }
-
-  .checkbox-line{display:flex; gap:10px; align-items:flex-start;}
-  .checkbox-line input{margin-top:3px; width:16px; height:16px; flex:none;}
-  .checkbox-line label{font-size:13px; color:var(--ink); line-height:1.55;}
-
-  .actions-bar{
-    display:flex; align-items:center; justify-content:space-between;
-    gap:12px; flex-wrap:wrap;
-  }
+  .gate-card input:focus{border-color:var(--navy);}
+  .gate-err{font-size:12px; color:var(--brick); margin:0 0 10px; display:none;}
   .btn-primary{
-    background:var(--navy); color:#fff; border:none;
-    font-family:var(--sans); font-weight:700; font-size:14px;
-    padding:13px 22px; border-radius:8px; cursor:pointer;
-    transition:background .15s ease;
+    background:var(--navy); color:#fff; border:none; font-family:var(--sans); font-weight:700;
+    font-size:14px; padding:12px 20px; border-radius:8px; cursor:pointer; width:100%;
   }
   .btn-primary:hover{background:var(--navy-deep);}
   .btn-primary:disabled{background:#A9B3BC; cursor:not-allowed;}
-  .btn-text{
-    background:none; border:none; color:var(--ink-soft);
-    font-family:var(--sans); font-size:12.5px; font-weight:600;
-    cursor:pointer; text-decoration:underline; padding:6px 0;
-  }
-  .save-note{font-size:11.5px; color:var(--ink-soft); font-family:var(--mono);}
+  .gate-note{font-size:11px; color:var(--ink-soft); margin-top:14px;}
 
-  .notice{
-    display:flex; gap:10px; align-items:flex-start;
-    background:#FBF1EF; border:1px solid #ECD2CC; color:#7A2C22;
-    border-radius:8px; padding:12px 13px; font-size:12.5px;
+  /* ----- toolbar ----- */
+  .toolbar{
+    display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:14px 16px; margin-bottom:16px;
   }
+  .toolbar input[type=search]{
+    flex:1; min-width:180px; font-family:var(--sans); font-size:13.5px; padding:9px 11px;
+    border:1px solid var(--line); border-radius:7px; outline:none; background:#FCFBF8;
+  }
+  .toolbar input[type=search]:focus{border-color:var(--navy);}
+  .status-tabs{display:flex; gap:6px; flex-wrap:wrap;}
+  .status-tab{
+    font-family:var(--sans); font-size:12px; font-weight:600; padding:7px 12px;
+    border-radius:20px; border:1px solid var(--line); background:#fff; color:var(--ink-soft); cursor:pointer;
+  }
+  .status-tab.active{background:var(--navy); color:#fff; border-color:var(--navy);}
+  .btn-refresh{
+    background:var(--paper-dim); border:1px solid var(--line); color:var(--navy-deep);
+    font-family:var(--sans); font-size:12.5px; font-weight:600; padding:9px 13px; border-radius:7px; cursor:pointer;
+  }
+  .btn-refresh:hover{border-color:var(--gold);}
+  .summary-bar{font-size:12px; color:var(--ink-soft); margin-bottom:12px; font-family:var(--mono);}
 
-  /* ===== Success / receipt ===== */
-  .receipt-wrap{
-    display:flex; justify-content:center; padding:40px 20px 80px;
+  /* ----- cards list ----- */
+  .sub-card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:18px 20px; margin-bottom:12px; position:relative;
   }
-  .receipt{
-    max-width:520px; width:100%; background:var(--card);
-    border:1px solid var(--line); border-radius:14px;
-    padding:34px 30px; text-align:center; position:relative;
+  .sub-card::before{content:""; position:absolute; left:0; top:14px; bottom:14px; width:3px; border-radius:2px; background:var(--gold);}
+  .sub-card.status-verified::before{background:var(--green);}
+  .sub-card.status-rejected::before{background:var(--brick);}
+  .sub-head{display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:10px;}
+  .sub-head h3{font-family:var(--serif); font-size:16.5px; margin:0; color:var(--navy-deep);}
+  .sub-head .meta{font-size:12px; color:var(--ink-soft); margin-top:3px; font-family:var(--mono);}
+  .badge{
+    font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px;
+    background:#FCF3DC; color:var(--amber); white-space:nowrap; height:fit-content;
   }
-  .stamp{width:120px; height:120px; margin:0 auto 14px;}
-  .receipt h2{font-family:var(--serif); color:var(--navy-deep); font-size:22px; margin:0 0 6px;}
-  .receipt p{color:var(--ink-soft); font-size:13.5px; margin:0 0 20px;}
-  .code-box{
-    font-family:var(--mono); font-size:18px; font-weight:600; color:var(--navy);
-    background:var(--paper-dim); border:1px dashed var(--gold);
-    border-radius:8px; padding:12px; letter-spacing:.06em; margin-bottom:18px;
+  .badge.verified{background:#E7F0EA; color:var(--green);}
+  .badge.rejected{background:#FBEAE7; color:var(--brick);}
+  .sub-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:8px 16px; font-size:12.5px; margin-bottom:12px;}
+  .sub-grid div b{display:block; color:var(--ink-soft); font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; margin-bottom:2px; font-weight:600;}
+  .sub-links{font-size:12px; margin-bottom:12px;}
+  .sub-links a{color:var(--navy); text-decoration:underline;}
+  .sub-links summary{cursor:pointer; font-weight:600; color:var(--navy); font-size:12.5px;}
+  .verify-row{
+    display:flex; gap:8px; flex-wrap:wrap; align-items:flex-end;
+    border-top:1px dashed var(--line); padding-top:12px;
   }
-  .receipt .sub{font-size:12px; color:var(--ink-soft); text-align:left; background:var(--paper-dim); border-radius:8px; padding:12px 14px; margin-top:6px;}
+  .verify-field{display:flex; flex-direction:column; gap:4px; flex:1; min-width:160px;}
+  .verify-field label{font-size:11px; font-weight:600; color:var(--navy-deep);}
+  .verify-field select, .verify-field input{
+    font-family:var(--sans); font-size:13px; padding:8px 9px; border:1px solid var(--line);
+    border-radius:6px; outline:none; background:#FCFBF8;
+  }
+  .verify-field.grow{flex:2;}
+  .btn-save{
+    background:var(--navy); color:#fff; border:none; font-family:var(--sans); font-weight:700;
+    font-size:13px; padding:9px 16px; border-radius:7px; cursor:pointer; white-space:nowrap;
+  }
+  .btn-save:hover{background:var(--navy-deep);}
+  .btn-save:disabled{background:#A9B3BC; cursor:not-allowed;}
+  .save-hint{font-size:11px; color:var(--green); margin-top:6px; display:none;}
+  .save-hint.err{color:var(--brick);}
 
-  /* ===== History drawer ===== */
-  .drawer-backdrop{
-    position:fixed; inset:0; background:rgba(18,40,61,.45);
-    display:none; z-index:40;
-  }
-  .drawer-backdrop.open{display:block;}
-  .drawer{
-    position:fixed; top:0; right:0; height:100%; width:380px; max-width:92vw;
-    background:var(--paper); z-index:41;
-    transform:translateX(100%); transition:transform .25s ease;
-    display:flex; flex-direction:column;
-    border-left:1px solid var(--line);
-  }
-  .drawer.open{transform:translateX(0);}
-  .drawer-head{
-    padding:18px 20px; border-bottom:1px solid var(--line);
-    display:flex; align-items:center; justify-content:space-between;
-    background:var(--navy); color:#fff;
-  }
-  .drawer-head h3{font-family:var(--serif); margin:0; font-size:17px;}
-  .drawer-head button{background:none; border:none; color:#fff; font-size:20px; cursor:pointer; line-height:1;}
-  .drawer-body{padding:16px 18px; overflow-y:auto; flex:1;}
-  .hist-item{
-    background:var(--card); border:1px solid var(--line); border-radius:8px;
-    padding:13px 14px; margin-bottom:10px;
-  }
-  .hist-item .htitle{font-weight:700; font-size:13.5px; color:var(--navy-deep);}
-  .hist-item .hmeta{font-size:11.5px; color:var(--ink-soft); margin-top:3px; font-family:var(--mono);}
-  .hist-item .hstatus{
-    display:inline-block; margin-top:8px; font-size:11px; font-weight:700;
-    padding:3px 8px; border-radius:20px; background:#FCF3DC; color:#8A6A10;
-  }
-  .empty-state{font-size:13px; color:var(--ink-soft); text-align:center; padding:30px 10px;}
-
-  .req-star{color:var(--brick);}
-
-  @media print{
-    .side-nav, .masthead-actions, .actions-bar, .btn-ghost{display:none !important;}
-  }
+  .empty-state{font-size:13px; color:var(--ink-soft); text-align:center; padding:50px 10px;}
 </style>
 </head>
 <body>
 
 <header class="masthead">
   <div class="masthead-inner">
-    <svg class="seal" viewBox="0 0 100 100">
-      <circle cx="50" cy="50" r="46" fill="none" stroke="#E8DCB8" stroke-width="2"/>
-      <circle cx="50" cy="50" r="38" fill="none" stroke="#E8DCB8" stroke-width="1"/>
-      <path id="sealTextPath" d="M 50,12 A 38,38 0 1 1 49.9,12" fill="none"/>
-      <text font-family="JetBrains Mono" font-size="6.3" fill="#E8DCB8" letter-spacing="2">
-        <textPath href="#sealTextPath" startOffset="2%">BIDANG KEPEGAWAIAN • DINAS PUPR •</textPath>
-      </text>
-      <path d="M50 34 L54 46 L67 46 L56 54 L60 66 L50 58 L40 66 L44 54 L33 46 L46 46 Z" fill="#E8DCB8"/>
-    </svg>
     <div class="masthead-text">
       <p class="eyebrow">Bidang Kepegawaian · Dinas PUPR</p>
-      <h1>Formulir Pengajuan Kenaikan Pangkat &amp; KGB</h1>
-      <p>Isi seluruh bagian di bawah ini. Draf tersimpan otomatis di perangkat Anda.</p>
+      <h1>Panel Verifikasi Pengajuan</h1>
+      <p>Tinjau, verifikasi, atau tolak pengajuan kenaikan pangkat &amp; KGB yang masuk.</p>
     </div>
-    <div class="masthead-actions">
-      <button class="btn-ghost" onclick="openHistory()" type="button">Riwayat Saya</button>
+    <div class="masthead-actions" id="loggedInActions" style="display:none;">
+      <button class="btn-ghost" onclick="logout()" type="button">Keluar</button>
     </div>
   </div>
 </header>
 
-<div class="layout" id="formLayout">
-  <nav class="side-nav" id="sideNav">
-    <a class="nav-item" href="#bagian1" data-target="bagian1"><span class="dot"><span>1</span></span> Data Diri</a>
-    <a class="nav-item" href="#bagian2" data-target="bagian2"><span class="dot"><span>2</span></span> Data Kepegawaian</a>
-    <a class="nav-item" href="#bagian3" data-target="bagian3"><span class="dot"><span>3</span></span> Jenis Pengajuan</a>
-    <a class="nav-item" href="#bagian4" data-target="bagian4"><span class="dot"><span>4</span></span> Data Khusus</a>
-    <a class="nav-item" href="#bagian5" data-target="bagian5"><span class="dot"><span>5</span></span> Berkas Pengajuan</a>
-    <a class="nav-item" href="#bagian6" data-target="bagian6"><span class="dot"><span>6</span></span> Pernyataan</a>
-  </nav>
-
-  <form class="main-col" id="mainForm" novalidate>
-
-    <div class="notice" id="topNotice">
-      ⚠️ Formulir ini menyimpan draf dan riwayat pengajuan hanya di penyimpanan lokal (localStorage) pada perangkat/browser ini — data tidak dibagikan ke pengguna lain. Formulir ini <b>belum terhubung ke Google Sheet</b>; setelah mengirim, unduh bukti pengajuan dan sampaikan ke bagian kepegawaian sesuai prosedur kantor Anda.
-    </div>
-
-    <!-- BAGIAN 1 -->
-    <section class="card" id="bagian1">
-      <div class="card-head">
-        <p class="eyebrow">Bagian 1</p>
-        <h2>Data Diri</h2>
-      </div>
-      <div class="grid">
-        <div class="field" data-field="nama">
-          <label>Nama Lengkap + Gelar <span class="req">*</span></label>
-          <input type="text" id="nama" placeholder="cth. Budi Santoso, S.T., M.T.">
-          <span class="err-msg">Wajib diisi.</span>
-        </div>
-        <div class="field" data-field="email">
-          <label>Email</label>
-          <input type="email" id="email" placeholder="nama@contoh.go.id">
-        </div>
-        <div class="field" data-field="nip18">
-          <label>NIP 18 Digit <span class="req">*</span></label>
-          <input type="text" class="nip" id="nip18" maxlength="18" inputmode="numeric" placeholder="18 digit angka">
-          <span class="err-msg">Harus 18 digit angka.</span>
-        </div>
-        <div class="field" data-field="nip16">
-          <label>NIP Baru 16 Digit <span class="req">*</span></label>
-          <input type="text" class="nip" id="nip16" maxlength="16" inputmode="numeric" placeholder="16 digit angka">
-          <span class="err-msg">Harus 16 digit angka.</span>
-        </div>
-        <div class="field" data-field="hp">
-          <label>No HP / WA Aktif <span class="req">*</span></label>
-          <input type="tel" id="hp" placeholder="08xxxxxxxxxx">
-          <span class="err-msg">Wajib diisi.</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- BAGIAN 2 -->
-    <section class="card" id="bagian2">
-      <div class="card-head">
-        <p class="eyebrow">Bagian 2</p>
-        <h2>Data Kepegawaian</h2>
-      </div>
-      <div class="grid">
-        <div class="field" data-field="unit">
-          <label>Unit Kerja / Bidang <span class="req">*</span></label>
-          <select id="unit">
-            <option value="">Pilih unit kerja</option>
-            <option>Sekretariat</option>
-            <option>Bidang Bina Marga</option>
-            <option>Bidang Cipta Karya</option>
-            <option>Bidang Sumber Daya Air</option>
-            <option>Bidang Tata Ruang</option>
-            <option>Bidang Jasa Konstruksi</option>
-            <option>UPTD</option>
-            <option>Lainnya</option>
-          </select>
-          <span class="err-msg">Wajib dipilih.</span>
-        </div>
-        <div class="field" data-field="jabatan">
-          <label>Jabatan <span class="req">*</span></label>
-          <input type="text" id="jabatan" placeholder="cth. Pengadministrasi Umum">
-          <span class="err-msg">Wajib diisi.</span>
-        </div>
-        <div class="field" data-field="golongan">
-          <label>Pangkat / Golongan Saat Ini <span class="req">*</span></label>
-          <select id="golongan"></select>
-          <span class="err-msg">Wajib dipilih.</span>
-        </div>
-        <div class="field" data-field="tmtPangkat">
-          <label>TMT Pangkat Terakhir <span class="req">*</span></label>
-          <input type="date" id="tmtPangkat">
-          <span class="err-msg">Wajib diisi.</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- BAGIAN 3 -->
-    <section class="card" id="bagian3">
-      <div class="card-head">
-        <p class="eyebrow">Bagian 3</p>
-        <h2>Pilih Jenis Pengajuan</h2>
-        <p class="hint">Setiap jenis pengajuan memiliki syarat dan berkas wajib yang berbeda. Syarat dan daftar upload akan tampil otomatis setelah Anda memilih.</p>
-      </div>
-      <div class="choice-group" id="jenisGroup" data-field="jenis">
-        <label class="choice" data-val="Kenaikan Pangkat Reguler">
-          <input type="radio" name="jenis" value="Kenaikan Pangkat Reguler">
-          <span class="ctext"><strong>Kenaikan Pangkat Reguler</strong><span>Kenaikan pangkat berkala sesuai masa kerja</span></span>
-        </label>
-        <label class="choice" data-val="Kenaikan Pangkat Penyesuaian Ijazah">
-          <input type="radio" name="jenis" value="Kenaikan Pangkat Penyesuaian Ijazah">
-          <span class="ctext"><strong>Kenaikan Pangkat Penyesuaian Ijazah</strong><span>Kenaikan pangkat karena peningkatan pendidikan</span></span>
-        </label>
-        <label class="choice" data-val="Kenaikan Gaji Berkala - KGB">
-          <input type="radio" name="jenis" value="Kenaikan Gaji Berkala - KGB">
-          <span class="ctext"><strong>Kenaikan Gaji Berkala (KGB)</strong><span>Penyesuaian gaji berkala rutin</span></span>
-        </label>
-      </div>
-      <span class="err-msg" id="jenisErr" style="display:none; margin-top:8px;">Silakan pilih salah satu jenis pengajuan.</span>
-
-      <!-- Kotak syarat pengajuan, berubah sesuai pilihan di atas -->
-      <div class="syarat-box" id="syaratBox" style="display:none;"></div>
-    </section>
-
-    <!-- BAGIAN 4 -->
-    <section class="card" id="bagian4">
-      <div class="card-head">
-        <p class="eyebrow">Bagian 4</p>
-        <h2>Data Khusus</h2>
-        <p class="hint">Bagian ini menyesuaikan otomatis dengan jenis pengajuan yang dipilih pada Bagian 3.</p>
-      </div>
-
-      <div id="pangkatMetaFields" style="display:none;">
-        <div class="grid">
-          <div class="field" data-field="pangkatDiusulkan">
-            <label>Pangkat Yang Diusulkan <span class="req">*</span></label>
-            <select id="pangkatDiusulkan"></select>
-            <span class="err-msg">Wajib dipilih.</span>
-          </div>
-          <div class="field" data-field="tmtDiusulkan">
-            <label>TMT Kenaikan Pangkat Yang Diusulkan <span class="req">*</span></label>
-            <input type="date" id="tmtDiusulkan">
-            <span class="err-msg">Wajib diisi.</span>
-          </div>
-        </div>
-      </div>
-
-      <div id="kgbMetaFields" style="display:none;">
-        <div class="grid">
-          <div class="field" data-field="tmtKgb">
-            <label>TMT KGB Terakhir <span class="req">*</span></label>
-            <input type="date" id="tmtKgb">
-            <span class="err-msg">Wajib diisi.</span>
-          </div>
-          <div class="field" data-field="tglSkKgb">
-            <label>Tanggal SK KGB</label>
-            <input type="date" id="tglSkKgb">
-          </div>
-        </div>
-      </div>
-
-      <div id="bagian4Empty" class="empty-state">Pilih jenis pengajuan pada Bagian 3 untuk menampilkan bagian ini.</div>
-    </section>
-
-    <!-- BAGIAN 5 -->
-    <section class="card" id="bagian5">
-      <div class="card-head">
-        <p class="eyebrow">Bagian 5</p>
-        <h2>Berkas Pengajuan</h2>
-        <p class="hint" id="berkasHint">Pilih jenis pengajuan pada Bagian 3 (dan kategori jabatan bila diminta) untuk menampilkan daftar berkas yang wajib diunggah.</p>
-      </div>
-      <div class="grid" id="berkasChecklist"></div>
-    </section>
-
-    <!-- BAGIAN 6 -->
-    <section class="card" id="bagian6">
-      <div class="card-head">
-        <p class="eyebrow">Bagian 6</p>
-        <h2>Pernyataan</h2>
-      </div>
-      <div class="checkbox-line" data-field="pernyataan">
-        <input type="checkbox" id="pernyataan">
-        <label for="pernyataan">Saya menyatakan data dan berkas yang saya upload adalah benar. Jika terdapat ketidaksesuaian, saya bersedia menerima konsekuensi.</label>
-      </div>
-      <span class="err-msg" id="pernyataanErr" style="display:none; margin-top:8px;">Anda harus menyetujui pernyataan ini sebelum mengirim.</span>
-    </section>
-
-    <div class="actions-bar">
-      <span class="save-note" id="saveNote">Draf tersimpan otomatis</span>
-      <div style="display:flex; gap:10px; align-items:center;">
-        <button type="button" class="btn-text" onclick="clearDraft()">Hapus draf</button>
-        <button type="submit" class="btn-primary" id="submitBtn">Kirim Pengajuan</button>
-      </div>
-    </div>
-  </form>
-</div>
-
-<!-- Receipt view (hidden until submit) -->
-<div class="receipt-wrap" id="receiptWrap" style="display:none;">
-  <div class="receipt">
-    <svg class="stamp" id="stampSvg" viewBox="0 0 120 120">
-      <g id="stampGroup" style="transform-origin:60px 60px;">
-        <circle cx="60" cy="60" r="52" fill="none" stroke="#A23B2E" stroke-width="2.5"/>
-        <circle cx="60" cy="60" r="44" fill="none" stroke="#A23B2E" stroke-width="1"/>
-        <path id="stampTextPath" d="M 60,16 A 44,44 0 1 1 59.9,16" fill="none"/>
-        <text font-family="JetBrains Mono" font-size="6.4" fill="#A23B2E" letter-spacing="2">
-          <textPath href="#stampTextPath" startOffset="1%">TELAH DITERIMA • KEPEGAWAIAN PUPR •</textPath>
-        </text>
-        <text x="60" y="57" text-anchor="middle" font-family="Source Serif 4" font-weight="700" font-size="15" fill="#A23B2E">DITERIMA</text>
-        <text x="60" y="72" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#A23B2E" id="stampDate">--</text>
-      </g>
-    </svg>
-    <h2>Pengajuan Berhasil Disimpan</h2>
-    <p>Simpan kode referensi berikut sebagai bukti, dan sampaikan ke Bidang Kepegawaian sesuai prosedur di kantor Anda.</p>
-    <div class="code-box" id="trackingCode">—</div>
-    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-      <button class="btn-primary" onclick="downloadReceipt()" type="button">Unduh Bukti (JSON)</button>
-      <button class="btn-ghost" style="color:var(--navy); border-color:var(--line);" onclick="resetForm()" type="button">Ajukan Lagi</button>
-    </div>
-    <p class="sub" id="receiptSubNote">Data lengkap pengajuan ini (termasuk berkas) tersimpan di localStorage browser ini, dapat dilihat lewat "Riwayat Saya".</p>
+<!-- GATE: masuk dengan kode akses -->
+<div class="gate-wrap" id="gateWrap">
+  <div class="gate-card">
+    <div class="icon">🔐</div>
+    <h2>Masuk Panel Verifikasi</h2>
+    <p>Masukkan kode akses staf kepegawaian untuk melanjutkan.</p>
+    <input type="password" id="tokenInput" placeholder="Kode akses" autocomplete="off">
+    <p class="gate-err" id="gateErr">Kode akses salah atau URL Apps Script belum diatur.</p>
+    <button class="btn-primary" id="loginBtn" onclick="doLogin()">Masuk</button>
+    <p class="gate-note">Kode akses diberikan oleh pengelola sistem (ADMIN_TOKEN pada Apps Script). Jangan bagikan kode ini ke pegawai umum.</p>
   </div>
 </div>
 
-<!-- History drawer -->
-<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeHistory()"></div>
-<div class="drawer" id="drawer">
-  <div class="drawer-head">
-    <h3>Riwayat Pengajuan Saya</h3>
-    <button onclick="closeHistory()" type="button">×</button>
+<!-- MAIN: daftar pengajuan -->
+<div class="wrap" id="mainWrap" style="display:none;">
+  <div class="toolbar">
+    <input type="search" id="searchInput" placeholder="Cari nama, NIP, atau kode referensi…">
+    <div class="status-tabs" id="statusTabs">
+      <button class="status-tab active" data-f="semua" type="button">Semua</button>
+      <button class="status-tab" data-f="menunggu" type="button">Menunggu Verifikasi</button>
+      <button class="status-tab" data-f="verified" type="button">Diverifikasi</button>
+      <button class="status-tab" data-f="rejected" type="button">Ditolak</button>
+    </div>
+    <button class="btn-refresh" onclick="loadSubmissions()" type="button">↻ Muat Ulang</button>
   </div>
-  <div class="drawer-body" id="historyBody">
-    <div class="empty-state">Memuat…</div>
-  </div>
+
+  <div class="summary-bar" id="summaryBar"></div>
+  <div id="listBody"><div class="empty-state">Memuat data…</div></div>
 </div>
 
 <script>
 /* ============================================================
-   KONEKSI KE GOOGLE APPS SCRIPT
-   1. Buat Google Sheet baru, buka Extensions > Apps Script.
-   2. Tempel kode "Code.gs" yang diberikan terpisah, lalu Deploy
-      > New deployment > Web app (Execute as: Me, Who has access: Anyone).
-   3. Salin URL Web App yang muncul, tempel di antara tanda kutip di bawah ini.
-   4. Kosongkan ('') jika belum ingin memakai Apps Script — form tetap
-      berfungsi secara lokal saja.
+   KONFIGURASI
+   Tempel URL Web App Apps Script yang SAMA dengan yang dipakai
+   formulir.html — panel ini pakai backend yang sama.
 ============================================================ */
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx4Aov8oFtwXRvMqg_bfNIdQTguT0TikEHWTNMhN4wgW8I0sdcqXp5oS-7qj7OC8t2ECA/exec'; // <-- tempel URL Web App Apps Script Anda di sini
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx4Aov8oFtwXRvMqg_bfNIdQTguT0TikEHWTNMhN4wgW8I0sdcqXp5oS-7qj7OC8t2ECA/exec';
 
-const GOL = ["II/a","II/b","II/c","II/d","III/a","III/b","III/c","III/d","IV/a","IV/b","IV/c","IV/d","IV/e"];
-function fillSelect(id){
-  const el = document.getElementById(id);
-  el.innerHTML = '<option value="">Pilih golongan</option>' + GOL.map(g=>`<option>${g}</option>`).join('');
-}
-fillSelect('golongan');
-fillSelect('pangkatDiusulkan');
+const TOKEN_KEY = 'admin:kepegawaian:token';
+const NAME_KEY = 'admin:kepegawaian:name';
 
-if(APPS_SCRIPT_URL){
-  document.getElementById('topNotice').innerHTML = '✅ Formulir ini terhubung ke Google Sheet kepegawaian. Saat Anda mengirim, data akan otomatis tercatat di Sheet dan notifikasi email terkirim. Draf dan riwayat lokal tetap tersimpan di browser ini sebagai cadangan.';
-}
-
-const form = document.getElementById('mainForm');
-const DRAFT_KEY = 'draft:pengajuan-kepegawaian';
-let draftTimer = null;
-
-/* ---------- syarat pengajuan per jenis (sesuai Syarat Kenaikan Pangkat & Pencantuman Gelar ASN) ---------- */
-const SYARAT = {
-  'Kenaikan Pangkat Reguler': {
-    desc: 'Syarat berkas mengikuti kategori jabatan Anda saat pengusulan — pilih salah satu di bawah.',
-    kategori: {
-      'Reguler': [
-        'Foto Copy SK CPNS dan PNS (khusus untuk kenaikan pangkat pertama kali) dilegalisir',
-        'Foto Copy SK Pangkat Terakhir dilegalisir',
-        'ASLI/Foto Copy Sah SKP 2 tahun terakhir',
-        'Foto Copy Sertifikat Ujian Dinas Tk. I (yang akan naik pangkat dari III/d ke IV/a) dilegalisir',
-        'Foto Copy SK Pindah (bila ada) dilegalisir',
-        'Foto Copy Peninjauan Masa Kerja dan Pencantuman Gelar (bila ada)',
-        'Surat Keterangan Bebas Temuan dari Inspektorat Provinsi Sulawesi Barat',
-        'Surat Keterangan Bebas Narkotika dari BNN Provinsi Sulawesi Barat atau RSUD',
-        'Melampirkan SK Jabatan Terakhir Atasan Langsung yang dilegalisir',
-        'Meremajakan Jabatan berdasarkan Jabatan saat Pengusulan Berkas Kenaikan Pangkat',
-        'Surat Pengantar dari OPD'
-      ],
-      'Jabatan Struktural': [
-        'Foto Copy SK Pangkat Terakhir dilegalisir',
-        'Foto Copy SK Jabatan / Pernyataan Pelantikan (mulai dari SK Jabatan yang tertulis pada pangkat terakhir sampai sekarang) dilegalisir',
-        'Sertifikat Ujian Dinas Tk. I bagi PNS yang memiliki Pendidikan S.1 (khusus untuk pejabat administrator yang akan naik pangkat dari III/d ke IV/a) dilegalisir',
-        'Foto Copy SK Pindah (bila ada) dilegalisir',
-        'Foto Copy Peninjauan Masa Kerja dan Pencantuman Gelar (bila ada)',
-        'Surat Keterangan Bebas Temuan dari Inspektorat Provinsi Sulawesi Barat',
-        'Surat Keterangan Bebas Narkotika dari BNN Provinsi Sulawesi Barat atau RSUD',
-        'ASLI/Foto Copy Sah SKP 2 tahun terakhir',
-        'Melampirkan SK Jabatan Terakhir Atasan Langsung yang dilegalisir',
-        'Melampirkan Surat Keterangan Tidak Terdampak Penyetaraan dari Ortala (bagi pejabat eselon IV)',
-        'SK Pemberhentian dari Jabatan Fungsional (bagi yang pernah menjabat dalam jabatan fungsional)',
-        'Surat Pengantar dari OPD'
-      ],
-      'Jabatan Fungsional Tertentu': [
-        'Foto Copy SK CPNS dilegalisir',
-        'Foto Copy SK PNS dilegalisir',
-        'Foto Copy SK Pangkat Terakhir dilegalisir',
-        'ASLI Penetapan Angka Kredit (PAK), mulai dari PAK yang tertera pada SK Pengangkatan/Pangkat Terakhir sampai pada PAK Terakhir',
-        'Foto Copy SK Pengangkatan dalam Jabatan (Pertama, Kembali, Perpindahan Jabatan, Inpassing) dilegalisir',
-        'Foto Copy SK Kenaikan Jabatan (khusus untuk naik jenjang jabatan) dilegalisir',
-        'Foto Copy Sertifikat Uji Kompetensi untuk kenaikan jenjang (jika dipersyaratkan) dilegalisir',
-        'Foto Copy SK Pindah (bila ada) dilegalisir',
-        'Foto Copy Peninjauan Masa Kerja dan Pencantuman Gelar (bila ada)',
-        'Surat Keterangan Bebas Temuan dari Inspektorat Provinsi Sulawesi Barat',
-        'Surat Keterangan Bebas Narkotika dari BNN Provinsi Sulawesi Barat atau RSUD',
-        'Melampirkan Tugas / Izin belajar (bagi yang selesai mengikuti peningkatan pendidikan) dilegalisir',
-        'Meremajakan Jabatan berdasarkan Jabatan saat Pengusulan Berkas Kenaikan Pangkat',
-        'ASLI/Foto Copy Sah SKP 2 tahun terakhir serta SKP bulan berjalan apabila telah mengklaim Angka Kredit',
-        'Melampirkan SK Jabatan Terakhir Atasan Langsung yang dilegalisir',
-        'Surat Pengantar dari OPD'
-      ]
-    }
-  },
-  'Kenaikan Pangkat Penyesuaian Ijazah': {
-    desc: 'Pengajuan ini menggunakan syarat Pencantuman Gelar — pilih kategori jabatan Anda di bawah.',
-    kategori: {
-      'Reguler dan Struktural': [
-        'Foto copy dan dilegalisir SK CPNS dan PNS (Wajib)',
-        'Foto copy dan dilegalisir SK Pangkat Terakhir (bagi yang memiliki)',
-        'Foto copy dan dilegalisir SK Tugas Belajar (bagi yang memiliki)',
-        'Dokumen Surat Keterangan Memiliki Ijazah / Surat Keterangan Sedang Menyelesaikan Tugas Akhir (bagi yang memiliki)',
-        'Dokumen SK Penyetaraan Ijazah bagi Lulusan Luar Negeri (bagi yang memiliki)',
-        'Scan Ijazah Terakhir dan Transkrip Nilai (Asli & Wajib)',
-        'Sertifikat Akreditasi Jurusan (bagi yang memiliki)',
-        'Surat Keterangan Pengembalian dari Kampus (bagi yang memiliki)',
-        'Melampirkan bukti terdaftar pada PDPT (Pangkalan Data Perguruan Tinggi) melalui pddikti.kemdikbud.go.id — gunakan tombol Print Screen',
-        'SPTJM Pencantuman Gelar (Wajib)',
-        'Surat Pengantar dari OPD'
-      ],
-      'Jabatan Fungsional Tertentu': [
-        'Foto copy dan dilegalisir SK CPNS dan PNS (Wajib)',
-        'Foto copy dan dilegalisir SK Pangkat Terakhir (bagi yang memiliki)',
-        'Foto copy dan dilegalisir SK Tugas Belajar (bagi yang memiliki)',
-        'Dokumen Surat Keterangan Memiliki Ijazah / Surat Keterangan Sedang Menyelesaikan Tugas Akhir (bagi yang memiliki)',
-        'Dokumen SK Penyetaraan Ijazah bagi Lulusan Luar Negeri (bagi yang memiliki)',
-        'Scan Ijazah Terakhir dan Transkrip Nilai (Asli & Wajib)',
-        'Sertifikat Akreditasi Jurusan (bagi yang memiliki)',
-        'Surat Keterangan Pengembalian dari Kampus (bagi yang memiliki)',
-        'SK Jabatan Fungsional Pengangkatan dan Pemberhentian',
-        'ASLI Penetapan Angka Kredit (PAK), mulai dari PAK yang tertera pada SK Pengangkatan/Pangkat Terakhir sampai pada PAK Terakhir',
-        'Melampirkan bukti terdaftar pada PDPT (Pangkalan Data Perguruan Tinggi) melalui pddikti.kemdikbud.go.id — gunakan tombol Print Screen',
-        'SPTJM Pencantuman Gelar (Wajib)',
-        'Surat Pengantar dari OPD'
-      ]
-    }
-  },
-  'Kenaikan Gaji Berkala - KGB': {
-    desc: 'Penyesuaian gaji berkala rutin.',
-    syarat: [
-      'SK jabatan terakhir',
-      'SK KGB terakhir sebagai dasar perhitungan',
-    ]
-  }
-};
-
-/* ---------- berkas wajib upload per jenis + kategori (semua di-upload lewat formulir ini) ---------- */
-const BERKAS_UMUM = [
-  {id:'filePhoto', label:'Pas Foto 3x4 Background Merah', accept:'image', required:true}
+const STATUS_OPTIONS = [
+  'Diterima - Menunggu Verifikasi',
+  'Sedang Diverifikasi',
+  'Diverifikasi - Berkas Lengkap',
+  'Diteruskan ke BKD',
+  'Ditolak - Berkas Tidak Lengkap',
+  'Selesai',
 ];
 
-const BERKAS_MAP = {
-  'Kenaikan Pangkat Reguler': { kategori: {
-    'Reguler': [
-      {id:'skCpnsPns', label:'SK CPNS dan PNS (khusus kenaikan pangkat pertama kali)', accept:'pdf', required:false},
-      {id:'skPangkatTerakhir', label:'SK Pangkat Terakhir', accept:'pdf', required:true},
-      {id:'skp2Tahun', label:'SKP 2 Tahun Terakhir (Asli/Foto Copy Sah)', accept:'pdf', required:true},
-      {id:'sertifikatUjianDinas', label:'Sertifikat Ujian Dinas Tk. I (naik pangkat dari III/d ke IV/a)', accept:'pdf', required:false},
-      {id:'skPindah', label:'SK Pindah', accept:'pdf', required:false},
-      {id:'peninjauanMasaKerja', label:'Peninjauan Masa Kerja & Pencantuman Gelar', accept:'pdf', required:false},
-      {id:'suratBebasTemuan', label:'Surat Keterangan Bebas Temuan (Inspektorat Prov. Sulbar)', accept:'pdf', required:true},
-      {id:'suratBebasNarkotika', label:'Surat Keterangan Bebas Narkotika (BNN Prov. Sulbar/RSUD)', accept:'pdf', required:true},
-      {id:'skJabatanAtasan', label:'SK Jabatan Terakhir Atasan Langsung', accept:'pdf', required:true},
-      {id:'suratPengantarOpd', label:'Surat Pengantar dari OPD', accept:'pdf', required:true}
-    ],
-    'Jabatan Struktural': [
-      {id:'skPangkatTerakhir', label:'SK Pangkat Terakhir', accept:'pdf', required:true},
-      {id:'skJabatanPelantikan', label:'SK Jabatan / Pernyataan Pelantikan (dari SK pada pangkat terakhir s.d. sekarang)', accept:'pdf', required:true},
-      {id:'sertifikatUjianDinas', label:'Sertifikat Ujian Dinas Tk. I bagi Pendidikan S.1 (administrator naik III/d ke IV/a)', accept:'pdf', required:false},
-      {id:'skPindah', label:'SK Pindah', accept:'pdf', required:false},
-      {id:'peninjauanMasaKerja', label:'Peninjauan Masa Kerja & Pencantuman Gelar', accept:'pdf', required:false},
-      {id:'suratBebasTemuan', label:'Surat Keterangan Bebas Temuan (Inspektorat Prov. Sulbar)', accept:'pdf', required:true},
-      {id:'suratBebasNarkotika', label:'Surat Keterangan Bebas Narkotika (BNN Prov. Sulbar/RSUD)', accept:'pdf', required:true},
-      {id:'skp2Tahun', label:'SKP 2 Tahun Terakhir (Asli/Foto Copy Sah)', accept:'pdf', required:true},
-      {id:'skJabatanAtasan', label:'SK Jabatan Terakhir Atasan Langsung', accept:'pdf', required:true},
-      {id:'suratTidakTerdampak', label:'Surat Keterangan Tidak Terdampak Penyetaraan dari Ortala (eselon IV)', accept:'pdf', required:false},
-      {id:'skPemberhentianFungsional', label:'SK Pemberhentian dari Jabatan Fungsional', accept:'pdf', required:false},
-      {id:'suratPengantarOpd', label:'Surat Pengantar dari OPD', accept:'pdf', required:true}
-    ],
-    'Jabatan Fungsional Tertentu': [
-      {id:'skCpns', label:'SK CPNS', accept:'pdf', required:true},
-      {id:'skPns', label:'SK PNS', accept:'pdf', required:true},
-      {id:'skPangkatTerakhir', label:'SK Pangkat Terakhir', accept:'pdf', required:true},
-      {id:'pakAsli', label:'Penetapan Angka Kredit (PAK) Asli, dari SK Pengangkatan/Pangkat Terakhir s.d. PAK Terakhir', accept:'pdf', required:true},
-      {id:'skPengangkatanJabatan', label:'SK Pengangkatan dalam Jabatan (Pertama/Kembali/Perpindahan/Inpassing)', accept:'pdf', required:true},
-      {id:'skKenaikanJabatan', label:'SK Kenaikan Jabatan (khusus naik jenjang jabatan)', accept:'pdf', required:false},
-      {id:'sertifikatUjiKompetensi', label:'Sertifikat Uji Kompetensi untuk kenaikan jenjang (jika dipersyaratkan)', accept:'pdf', required:false},
-      {id:'skPindah', label:'SK Pindah', accept:'pdf', required:false},
-      {id:'peninjauanMasaKerja', label:'Peninjauan Masa Kerja & Pencantuman Gelar', accept:'pdf', required:false},
-      {id:'suratBebasTemuan', label:'Surat Keterangan Bebas Temuan (Inspektorat Prov. Sulbar)', accept:'pdf', required:true},
-      {id:'suratBebasNarkotika', label:'Surat Keterangan Bebas Narkotika (BNN Prov. Sulbar/RSUD)', accept:'pdf', required:true},
-      {id:'suratTugasBelajarFungsional', label:'Tugas / Izin Belajar (bagi yang selesai peningkatan pendidikan)', accept:'pdf', required:false},
-      {id:'skp2TahunPak', label:'SKP 2 Tahun Terakhir + SKP Bulan Berjalan (jika telah klaim Angka Kredit)', accept:'pdf', required:true},
-      {id:'skJabatanAtasan', label:'SK Jabatan Terakhir Atasan Langsung', accept:'pdf', required:true},
-      {id:'suratPengantarOpd', label:'Surat Pengantar dari OPD', accept:'pdf', required:true}
-    ]
-  }},
-  'Kenaikan Pangkat Penyesuaian Ijazah': { kategori: {
-    'Reguler dan Struktural': [
-      {id:'skCpnsPnsGelar', label:'SK CPNS dan PNS', accept:'pdf', required:true},
-      {id:'skPangkatTerakhirGelar', label:'SK Pangkat Terakhir', accept:'pdf', required:false},
-      {id:'skTugasBelajar', label:'SK Tugas Belajar', accept:'pdf', required:false},
-      {id:'suratKetIjazah', label:'Surat Keterangan Memiliki Ijazah / Sedang Menyelesaikan Tugas Akhir', accept:'pdf', required:false},
-      {id:'skPenyetaraanIjazah', label:'SK Penyetaraan Ijazah bagi Lulusan Luar Negeri', accept:'pdf', required:false},
-      {id:'scanIjazahTranskrip', label:'Scan Ijazah Terakhir dan Transkrip Nilai (Asli)', accept:'pdf', required:true},
-      {id:'sertifikatAkreditasi', label:'Sertifikat Akreditasi Jurusan', accept:'pdf', required:false},
-      {id:'suratPengembalianKampus', label:'Surat Keterangan Pengembalian dari Kampus', accept:'pdf', required:false},
-      {id:'buktiPddikti', label:'Bukti Terdaftar di PDDIKTI (screenshot pddikti.kemdikbud.go.id)', accept:'image', required:true},
-      {id:'sptjmGelar', label:'SPTJM Pencantuman Gelar', accept:'pdf', required:true},
-      {id:'suratPengantarOpd', label:'Surat Pengantar dari OPD', accept:'pdf', required:true}
-    ],
-    'Jabatan Fungsional Tertentu': [
-      {id:'skCpnsPnsGelar', label:'SK CPNS dan PNS', accept:'pdf', required:true},
-      {id:'skPangkatTerakhirGelar', label:'SK Pangkat Terakhir', accept:'pdf', required:false},
-      {id:'skTugasBelajar', label:'SK Tugas Belajar', accept:'pdf', required:false},
-      {id:'suratKetIjazah', label:'Surat Keterangan Memiliki Ijazah / Sedang Menyelesaikan Tugas Akhir', accept:'pdf', required:false},
-      {id:'skPenyetaraanIjazah', label:'SK Penyetaraan Ijazah bagi Lulusan Luar Negeri', accept:'pdf', required:false},
-      {id:'scanIjazahTranskrip', label:'Scan Ijazah Terakhir dan Transkrip Nilai (Asli)', accept:'pdf', required:true},
-      {id:'sertifikatAkreditasi', label:'Sertifikat Akreditasi Jurusan', accept:'pdf', required:false},
-      {id:'suratPengembalianKampus', label:'Surat Keterangan Pengembalian dari Kampus', accept:'pdf', required:false},
-      {id:'skJabatanFungsionalPP', label:'SK Jabatan Fungsional Pengangkatan dan Pemberhentian', accept:'pdf', required:true},
-      {id:'pakAsli', label:'Penetapan Angka Kredit (PAK) Asli, dari SK Pengangkatan/Pangkat Terakhir s.d. PAK Terakhir', accept:'pdf', required:true},
-      {id:'buktiPddikti', label:'Bukti Terdaftar di PDDIKTI (screenshot pddikti.kemdikbud.go.id)', accept:'image', required:true},
-      {id:'sptjmGelar', label:'SPTJM Pencantuman Gelar', accept:'pdf', required:true},
-      {id:'suratPengantarOpd', label:'Surat Pengantar dari OPD', accept:'pdf', required:true}
-    ]
-  }},
-  'Kenaikan Gaji Berkala - KGB': { flat: [
-    {id:'fileKgb', label:'SK KGB Terakhir', accept:'pdf', required:true},
-    {id:'skjabatanterakhir', label:'SK jabatan terakhir', accept:'pdf', required:true}
-  ]}
-};
-
-/* ---------- side nav active state via scroll ---------- */
-const sections = ['bagian1','bagian2','bagian3','bagian4','bagian5','bagian6'];
-const navItems = document.querySelectorAll('.nav-item');
-const io = new IntersectionObserver((entries)=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){
-      navItems.forEach(n=>n.classList.toggle('active', n.dataset.target === e.target.id));
-    }
-  });
-},{rootMargin:'-20% 0px -70% 0px'});
-sections.forEach(id=>{ const el=document.getElementById(id); if(el) io.observe(el); });
-
-/* ---------- Bagian 3 -> Bagian 4 & 5 conditional logic ---------- */
-const jenisRadios = document.querySelectorAll('input[name="jenis"]');
-const pangkatMetaFields = document.getElementById('pangkatMetaFields');
-const kgbMetaFields = document.getElementById('kgbMetaFields');
-const bagian4Empty = document.getElementById('bagian4Empty');
-const syaratBox = document.getElementById('syaratBox');
-const berkasChecklist = document.getElementById('berkasChecklist');
-const berkasHint = document.getElementById('berkasHint');
-
-const fileData = {}; // id -> {name, type, size, base64}
-let currentKategori = null;
+let allRows = [];
+let activeFilter = 'semua';
 
 function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-function renderSyaratBox(val){
-  if(!val || !SYARAT[val]){
-    syaratBox.style.display = 'none';
-    syaratBox.innerHTML = '';
+function statusClass(status){
+  const s = (status||'').toLowerCase();
+  if(s.includes('ditolak')) return 'rejected';
+  if(s.includes('verifikasi') && !s.includes('menunggu')) return 'verified';
+  if(s.includes('diteruskan') || s.includes('selesai')) return 'verified';
+  return '';
+}
+
+/* ---------- gate / login ---------- */
+function doLogin(){
+  const token = document.getElementById('tokenInput').value.trim();
+  const err = document.getElementById('gateErr');
+  if(!APPS_SCRIPT_URL){
+    err.textContent = 'APPS_SCRIPT_URL belum diatur di file admin.html ini.';
+    err.style.display = 'block';
     return;
   }
-  const data = SYARAT[val];
-  let html = `
-    <div class="syarat-head">
-      <span class="syarat-icon">📋</span>
-      <div>
-        <strong>Syarat Pengajuan</strong>
-        <p>${escapeHtml(data.desc)}</p>
-      </div>
-    </div>`;
+  if(!token){
+    err.textContent = 'Masukkan kode akses terlebih dahulu.';
+    err.style.display = 'block';
+    return;
+  }
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = 'Memeriksa…';
+  err.style.display = 'none';
 
-  if(data.kategori){
-    const keys = Object.keys(data.kategori);
-    if(!currentKategori || !keys.includes(currentKategori)){
-      currentKategori = keys[0];
-    }
-    html += `<div class="kategori-pills">` + keys.map(k =>
-      `<button type="button" class="kategori-pill${k === currentKategori ? ' active' : ''}" data-k="${escapeHtml(k)}">${escapeHtml(k)}</button>`
-    ).join('') + `</div>`;
-    html += `<ul class="syarat-list">` + data.kategori[currentKategori].map(s => `<li>${escapeHtml(s)}</li>`).join('') + `</ul>`;
-  } else if(data.syarat){
-    html += `<ul class="syarat-list">` + data.syarat.map(s => `<li>${escapeHtml(s)}</li>`).join('') + `</ul>`;
+  fetch(APPS_SCRIPT_URL + '?action=list&token=' + encodeURIComponent(token))
+    .then(r => r.json())
+    .then(json => {
+      btn.disabled = false; btn.textContent = 'Masuk';
+      if(json.ok){
+        sessionStorage.setItem(TOKEN_KEY, token);
+        allRows = json.rows || [];
+        showMain();
+        renderList();
+      } else {
+        err.textContent = 'Kode akses salah, atau ADMIN_TOKEN belum diganti di Apps Script.';
+        err.style.display = 'block';
+      }
+    })
+    .catch(e => {
+      btn.disabled = false; btn.textContent = 'Masuk';
+      err.textContent = 'Gagal terhubung ke server: ' + e;
+      err.style.display = 'block';
+    });
+}
+
+function showMain(){
+  document.getElementById('gateWrap').style.display = 'none';
+  document.getElementById('mainWrap').style.display = 'block';
+  document.getElementById('loggedInActions').style.display = 'flex';
+}
+
+function logout(){
+  sessionStorage.removeItem(TOKEN_KEY);
+  document.getElementById('gateWrap').style.display = 'flex';
+  document.getElementById('mainWrap').style.display = 'none';
+  document.getElementById('loggedInActions').style.display = 'none';
+  document.getElementById('tokenInput').value = '';
+}
+
+function getToken(){ return sessionStorage.getItem(TOKEN_KEY) || ''; }
+
+/* ---------- load data ---------- */
+function loadSubmissions(){
+  const token = getToken();
+  if(!token) return;
+  document.getElementById('listBody').innerHTML = '<div class="empty-state">Memuat data…</div>';
+  fetch(APPS_SCRIPT_URL + '?action=list&token=' + encodeURIComponent(token))
+    .then(r => r.json())
+    .then(json => {
+      if(json.ok){
+        allRows = json.rows || [];
+        renderList();
+      } else {
+        document.getElementById('listBody').innerHTML = '<div class="empty-state">Gagal memuat: ' + escapeHtml(json.error || 'tidak diketahui') + '. Coba keluar dan masuk kembali.</div>';
+      }
+    })
+    .catch(e => {
+      document.getElementById('listBody').innerHTML = '<div class="empty-state">Gagal terhubung ke server: ' + escapeHtml(String(e)) + '</div>';
+    });
+}
+
+/* ---------- filter + search ---------- */
+document.getElementById('statusTabs').addEventListener('click', e=>{
+  const btn = e.target.closest('.status-tab');
+  if(!btn) return;
+  document.querySelectorAll('.status-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = btn.dataset.f;
+  renderList();
+});
+document.getElementById('searchInput').addEventListener('input', renderList);
+
+function matchesFilter(row){
+  const cls = statusClass(row['Status']);
+  if(activeFilter === 'semua') return true;
+  if(activeFilter === 'menunggu') return cls === '';
+  if(activeFilter === 'verified') return cls === 'verified';
+  if(activeFilter === 'rejected') return cls === 'rejected';
+  return true;
+}
+function matchesSearch(row, q){
+  if(!q) return true;
+  q = q.toLowerCase();
+  return ['Kode Referensi','Nama','NIP 18','NIP 16','Unit Kerja'].some(k =>
+    String(row[k]||'').toLowerCase().includes(q)
+  );
+}
+
+/* ---------- render ---------- */
+function renderList(){
+  const q = document.getElementById('searchInput').value.trim();
+  const filtered = allRows.filter(r => matchesFilter(r) && matchesSearch(r, q));
+
+  document.getElementById('summaryBar').textContent =
+    `${filtered.length} dari ${allRows.length} pengajuan ditampilkan`;
+
+  if(filtered.length === 0){
+    document.getElementById('listBody').innerHTML = '<div class="empty-state">Tidak ada pengajuan yang cocok.</div>';
+    return;
   }
 
-  syaratBox.innerHTML = html;
-  syaratBox.style.display = 'block';
+  document.getElementById('listBody').innerHTML = filtered.map(rowToCard).join('');
 
-  syaratBox.querySelectorAll('.kategori-pill').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      currentKategori = btn.dataset.k;
-      renderSyaratBox(val);
-      renderBerkasChecklist(val);
-      queueSaveDraft();
-    });
+  filtered.forEach(row=>{
+    const id = row['Kode Referensi'];
+    const btn = document.getElementById('save_' + cssId(id));
+    if(btn) btn.addEventListener('click', () => saveStatus(id));
   });
 }
 
-function currentBerkasList(jenis){
-  const cfg = BERKAS_MAP[jenis];
-  if(!cfg) return [];
-  const list = cfg.kategori ? (cfg.kategori[currentKategori] || []) : (cfg.flat || []);
-  return [...list, ...BERKAS_UMUM];
-}
+function cssId(id){ return String(id).replace(/[^a-zA-Z0-9_-]/g,'_'); }
 
-function fileFieldHtml(item){
-  const accept = item.accept === 'image' ? 'image/*' : 'application/pdf';
-  const icon = item.accept === 'image' ? '🖼️' : '📄';
-  const existing = fileData[item.id];
+function rowToCard(row){
+  const id = row['Kode Referensi'];
+  const cid = cssId(id);
+  const cls = statusClass(row['Status']);
+  const links = String(row['Link Berkas']||'').split('\n').filter(Boolean);
+  const currentStatus = row['Status'] || STATUS_OPTIONS[0];
+
   return `
-    <div class="field" data-field="${item.id}">
-      <label>${escapeHtml(item.label)} ${item.required ? '<span class="req">*</span>' : '<span class="opt">(bila ada)</span>'}</label>
-      <label class="file-drop${existing ? ' file-ok' : ''}" id="drop_${item.id}">
-        <span class="ficon">${icon}</span>
-        <span class="ftext" id="text_${item.id}">${existing ? `<b>${escapeHtml(existing.name)}</b>${(existing.size/1024).toFixed(0)} KB — dipilih` : `<b>Pilih file ${item.accept === 'image' ? 'JPG/PNG' : 'PDF'}</b>Maks. 2MB`}</span>
-        <input type="file" accept="${accept}" id="file_${item.id}" data-fid="${item.id}">
-      </label>
-      <span class="err-msg">Wajib diunggah.</span>
-    </div>`;
-}
-
-function renderBerkasChecklist(jenis){
-  const list = currentBerkasList(jenis);
-  if(!jenis || list.length === 0){
-    berkasChecklist.innerHTML = '';
-    berkasHint.textContent = 'Pilih jenis pengajuan pada Bagian 3 (dan kategori jabatan bila diminta) untuk menampilkan daftar berkas yang wajib diunggah.';
-    return;
-  }
-  berkasHint.textContent = 'Berkas berikut wajib diunggah sesuai jenis dan kategori pengajuan Anda. Format PDF (foto boleh JPG/PNG), maksimal 2MB per berkas.';
-  berkasChecklist.innerHTML = list.map(fileFieldHtml).join('');
-
-  berkasChecklist.querySelectorAll('input[type=file]').forEach(input=>{
-    input.addEventListener('change', async ()=>{
-      const fid = input.dataset.fid;
-      const f = input.files[0];
-      if(!f) return;
-      if(f.size > 2*1024*1024){
-        alert('Ukuran file melebihi 2MB. Silakan kompres atau pilih file lain.');
-        input.value = '';
-        return;
-      }
-      const base64 = await new Promise((res,rej)=>{
-        const r = new FileReader();
-        r.onload = ()=>res(r.result);
-        r.onerror = rej;
-        r.readAsDataURL(f);
-      });
-      fileData[fid] = {name:f.name, type:f.type, size:f.size, base64};
-      const textEl = document.getElementById('text_'+fid);
-      const dropEl = document.getElementById('drop_'+fid);
-      textEl.innerHTML = `<b>${escapeHtml(f.name)}</b>${(f.size/1024).toFixed(0)} KB — dipilih`;
-      dropEl.classList.add('file-ok');
-      clearFieldError(fid);
-      queueSaveDraft();
-    });
-  });
-}
-
-function updateBagian4(){
-  const val = form.querySelector('input[name="jenis"]:checked')?.value;
-  document.querySelectorAll('#jenisGroup .choice').forEach(c=>{
-    c.classList.toggle('selected', c.dataset.val === val);
-  });
-
-  pangkatMetaFields.style.display = 'none';
-  kgbMetaFields.style.display = 'none';
-  bagian4Empty.style.display = 'none';
-
-  if(val === 'Kenaikan Pangkat Reguler' || val === 'Kenaikan Pangkat Penyesuaian Ijazah'){
-    pangkatMetaFields.style.display = 'block';
-  } else if(val === 'Kenaikan Gaji Berkala - KGB'){
-    kgbMetaFields.style.display = 'block';
-  } else {
-    bagian4Empty.style.display = 'block';
-  }
-
-  renderSyaratBox(val);
-  renderBerkasChecklist(val);
-}
-jenisRadios.forEach(r=>r.addEventListener('change', ()=>{ updateBagian4(); queueSaveDraft(); }));
-updateBagian4();
-
-/* ---------- NIP digit-only enforcement ---------- */
-['nip18','nip16'].forEach(id=>{
-  document.getElementById(id).addEventListener('input', e=>{
-    e.target.value = e.target.value.replace(/\D/g,'');
-  });
-});
-
-/* ---------- validation ---------- */
-function setFieldError(fieldId, on){
-  const wrap = document.querySelector(`[data-field="${fieldId}"]`);
-  if(wrap) wrap.classList.toggle('error', on);
-}
-function clearFieldError(fieldId){ setFieldError(fieldId, false); }
-
-function validate(){
-  let ok = true;
-  const req = {
-    nama: ()=>document.getElementById('nama').value.trim().length>0,
-    nip18: ()=>document.getElementById('nip18').value.length===18,
-    nip16: ()=>document.getElementById('nip16').value.length===16,
-    hp: ()=>document.getElementById('hp').value.trim().length>=8,
-    unit: ()=>document.getElementById('unit').value !== '',
-    jabatan: ()=>document.getElementById('jabatan').value.trim().length>0,
-    golongan: ()=>document.getElementById('golongan').value !== '',
-    tmtPangkat: ()=>document.getElementById('tmtPangkat').value !== '',
-  };
-  for(const [id,fn] of Object.entries(req)){
-    const good = fn();
-    setFieldError(id, !good);
-    if(!good) ok = false;
-  }
-
-  const jenis = form.querySelector('input[name="jenis"]:checked')?.value;
-  const jenisErr = document.getElementById('jenisErr');
-  if(!jenis){ jenisErr.style.display='block'; ok=false; } else { jenisErr.style.display='none'; }
-
-  if(jenis === 'Kenaikan Pangkat Reguler' || jenis === 'Kenaikan Pangkat Penyesuaian Ijazah'){
-    const reqP = {
-      pangkatDiusulkan: ()=>document.getElementById('pangkatDiusulkan').value !== '',
-      tmtDiusulkan: ()=>document.getElementById('tmtDiusulkan').value !== '',
-    };
-    for(const [id,fn] of Object.entries(reqP)){
-      const good = fn();
-      setFieldError(id, !good);
-      if(!good) ok = false;
-    }
-  } else if(jenis === 'Kenaikan Gaji Berkala - KGB'){
-    const reqK = {
-      tmtKgb: ()=>document.getElementById('tmtKgb').value !== '',
-    };
-    for(const [id,fn] of Object.entries(reqK)){
-      const good = fn();
-      setFieldError(id, !good);
-      if(!good) ok = false;
-    }
-  }
-
-  if(jenis){
-    currentBerkasList(jenis).forEach(item=>{
-      if(item.required){
-        const good = !!fileData[item.id];
-        setFieldError(item.id, !good);
-        if(!good) ok = false;
-      }
-    });
-  }
-
-  const pernyataanErr = document.getElementById('pernyataanErr');
-  const pernyataanOk = document.getElementById('pernyataan').checked;
-  pernyataanErr.style.display = pernyataanOk ? 'none' : 'block';
-  if(!pernyataanOk) ok = false;
-
-  return ok;
-}
-
-/* ---------- draft autosave (browser localStorage) ---------- */
-function collectFormValues(){
-  return {
-    nama: document.getElementById('nama').value,
-    email: document.getElementById('email').value,
-    nip18: document.getElementById('nip18').value,
-    nip16: document.getElementById('nip16').value,
-    hp: document.getElementById('hp').value,
-    unit: document.getElementById('unit').value,
-    jabatan: document.getElementById('jabatan').value,
-    golongan: document.getElementById('golongan').value,
-    tmtPangkat: document.getElementById('tmtPangkat').value,
-    jenis: form.querySelector('input[name="jenis"]:checked')?.value || '',
-    pangkatDiusulkan: document.getElementById('pangkatDiusulkan').value,
-    tmtDiusulkan: document.getElementById('tmtDiusulkan').value,
-    tmtKgb: document.getElementById('tmtKgb').value,
-    tglSkKgb: document.getElementById('tglSkKgb').value,
-    pernyataan: document.getElementById('pernyataan').checked,
-    kategoriJabatan: currentKategori,
-  };
-}
-
-function applyFormValues(v){
-  if(!v) return;
-  document.getElementById('nama').value = v.nama||'';
-  document.getElementById('email').value = v.email||'';
-  document.getElementById('nip18').value = v.nip18||'';
-  document.getElementById('nip16').value = v.nip16||'';
-  document.getElementById('hp').value = v.hp||'';
-  document.getElementById('unit').value = v.unit||'';
-  document.getElementById('jabatan').value = v.jabatan||'';
-  document.getElementById('golongan').value = v.golongan||'';
-  document.getElementById('tmtPangkat').value = v.tmtPangkat||'';
-  if(v.jenis){
-    const r = form.querySelector(`input[name="jenis"][value="${CSS.escape(v.jenis)}"]`);
-    if(r) r.checked = true;
-  }
-  document.getElementById('pangkatDiusulkan').value = v.pangkatDiusulkan||'';
-  document.getElementById('tmtDiusulkan').value = v.tmtDiusulkan||'';
-  document.getElementById('tmtKgb').value = v.tmtKgb||'';
-  document.getElementById('tglSkKgb').value = v.tglSkKgb||'';
-  document.getElementById('pernyataan').checked = !!v.pernyataan;
-  if(v.kategoriJabatan) currentKategori = v.kategoriJabatan;
-  updateBagian4();
-}
-
-function queueSaveDraft(){
-  document.getElementById('saveNote').textContent = 'Menyimpan draf…';
-  clearTimeout(draftTimer);
-  draftTimer = setTimeout(saveDraft, 600);
-}
-
-function saveDraft(){
-  try{
-    localStorage.setItem(DRAFT_KEY, JSON.stringify(collectFormValues()));
-    document.getElementById('saveNote').textContent = 'Draf tersimpan otomatis';
-  }catch(err){
-    console.error(err);
-    document.getElementById('saveNote').textContent = 'Gagal menyimpan draf';
-  }
-}
-
-function loadDraft(){
-  try{
-    const value = localStorage.getItem(DRAFT_KEY);
-    if(value){
-      applyFormValues(JSON.parse(value));
-    }
-  }catch(err){
-    console.error(err);
-  }
-}
-
-form.addEventListener('input', queueSaveDraft);
-form.addEventListener('change', queueSaveDraft);
-loadDraft();
-
-function clearDraft(){
-  if(!confirm('Hapus draf yang tersimpan di perangkat ini?')) return;
-  try{
-    localStorage.removeItem(DRAFT_KEY);
-  }catch(err){}
-  form.reset();
-  Object.keys(fileData).forEach(k=>delete fileData[k]);
-  currentKategori = null;
-  updateBagian4();
-  document.getElementById('saveNote').textContent = 'Draf dihapus';
-}
-
-/* ---------- submit ---------- */
-function genTrackingCode(){
-  const d = new Date();
-  const ymd = d.toISOString().slice(0,10).replace(/-/g,'');
-  const rand = Math.random().toString(36).slice(2,6).toUpperCase();
-  return `PUPR-KP-${ymd}-${rand}`;
-}
-
-let lastSubmission = null;
-
-async function sendToAppsScript(record){
-  if(!APPS_SCRIPT_URL) return {sent:false, reason:'not-configured'};
-  try{
-    const payload = {...record, files: fileData}; // fileData has base64 per field
-    const res = await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      headers: {'Content-Type': 'text/plain;charset=utf-8'}, // avoids CORS preflight
-      body: JSON.stringify(payload),
-    });
-    const json = await res.json().catch(()=>({ok:false}));
-    return {sent: !!json.ok, reason: json.ok ? 'ok' : (json.error || 'unknown-error')};
-  }catch(err){
-    return {sent:false, reason:String(err)};
-  }
-}
-
-form.addEventListener('submit', async (e)=>{
-  e.preventDefault();
-  if(!validate()){
-    const firstError = document.querySelector('.field.error, #jenisErr[style*="block"], #pernyataanErr[style*="block"]');
-    if(firstError) firstError.scrollIntoView({behavior:'smooth', block:'center'});
-    return;
-  }
-  const btn = document.getElementById('submitBtn');
-  btn.disabled = true; btn.textContent = 'Mengirim…';
-
-  const values = collectFormValues();
-  const code = genTrackingCode();
-  const submissionId = code;
-  const submittedAt = new Date().toISOString();
-
-  try{
-    // simpan tiap file di key localStorage tersendiri
-    for(const [fid, data] of Object.entries(fileData)){
-      localStorage.setItem(`file:${submissionId}:${fid}`, JSON.stringify(data));
-    }
-    const record = {
-      id: submissionId,
-      submittedAt,
-      ...values,
-      files: Object.keys(fileData),
-      status: 'Diterima - Menunggu Verifikasi',
-    };
-    localStorage.setItem(`submission:${submissionId}`, JSON.stringify(record));
-    localStorage.removeItem(DRAFT_KEY);
-    lastSubmission = record;
-
-    const remote = await sendToAppsScript(record);
-    record.remoteSent = remote.sent;
-    showReceipt(record, remote);
-  }catch(err){
-    console.error(err);
-    alert('Terjadi kendala saat menyimpan pengajuan (kemungkinan penyimpanan browser penuh). Silakan coba lagi atau kosongkan riwayat lama.');
-    btn.disabled = false; btn.textContent = 'Kirim Pengajuan';
-  }
-});
-
-function showReceipt(record, remote){
-  document.getElementById('formLayout').style.display = 'none';
-  document.getElementById('receiptWrap').style.display = 'flex';
-  document.getElementById('trackingCode').textContent = record.id;
-  document.getElementById('stampDate').textContent = new Date(record.submittedAt).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'});
-  const subNote = document.getElementById('receiptSubNote');
-  if(subNote){
-    if(!APPS_SCRIPT_URL){
-      subNote.textContent = 'Data lengkap pengajuan ini (termasuk berkas) tersimpan di localStorage browser ini, dapat dilihat lewat "Riwayat Saya". Formulir ini belum terhubung ke Google Sheet — unduh bukti dan sampaikan manual ke kepegawaian.';
-    } else if(remote && remote.sent){
-      subNote.textContent = 'Pengajuan ini juga sudah tercatat di Google Sheet kepegawaian dan notifikasi email telah dikirim.';
-    } else {
-      subNote.textContent = 'Pengajuan tersimpan di perangkat ini, namun gagal terkirim ke Google Sheet kepegawaian (' + (remote ? remote.reason : 'tidak diketahui') + '). Silakan unduh bukti dan sampaikan manual, atau coba kirim ulang.';
-    }
-  }
-  const g = document.getElementById('stampGroup');
-  g.style.transform = 'scale(2.4) rotate(-12deg)';
-  g.style.opacity = '0';
-  g.style.transition = 'transform .5s cubic-bezier(.2,.8,.2,1), opacity .3s ease';
-  requestAnimationFrame(()=>{
-    setTimeout(()=>{
-      g.style.transform = 'scale(1) rotate(-8deg)';
-      g.style.opacity = '1';
-    }, 120);
-  });
-}
-
-function resetForm(){
-  document.getElementById('formLayout').style.display = 'grid';
-  document.getElementById('receiptWrap').style.display = 'none';
-  form.reset();
-  Object.keys(fileData).forEach(k=>delete fileData[k]);
-  currentKategori = null;
-  document.querySelectorAll('.field.error').forEach(f=>f.classList.remove('error'));
-  updateBagian4();
-  document.getElementById('submitBtn').disabled = false;
-  document.getElementById('submitBtn').textContent = 'Kirim Pengajuan';
-  window.scrollTo({top:0, behavior:'smooth'});
-}
-
-function downloadReceipt(){
-  if(!lastSubmission) return;
-  const safe = {...lastSubmission};
-  delete safe.files; // avoid dumping base64 into the receipt
-  const blob = new Blob([JSON.stringify(safe, null, 2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = `bukti-pengajuan-${lastSubmission.id}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-/* ---------- history drawer ---------- */
-function openHistory(){
-  document.getElementById('drawerBackdrop').classList.add('open');
-  document.getElementById('drawer').classList.add('open');
-  const body = document.getElementById('historyBody');
-  body.innerHTML = '<div class="empty-state">Memuat…</div>';
-  try{
-    const items = [];
-    for(let i=0; i<localStorage.length; i++){
-      const k = localStorage.key(i);
-      if(k && k.startsWith('submission:')){
-        try{
-          const raw = localStorage.getItem(k);
-          if(raw) items.push(JSON.parse(raw));
-        }catch(err){}
-      }
-    }
-    if(items.length === 0){
-      body.innerHTML = '<div class="empty-state">Belum ada pengajuan yang tersimpan di perangkat ini.</div>';
-      return;
-    }
-    items.sort((a,b)=> new Date(b.submittedAt) - new Date(a.submittedAt));
-    body.innerHTML = items.map(it => `
-      <div class="hist-item">
-        <div class="htitle">${escapeHtml(it.jenis || 'Pengajuan')}</div>
-        <div class="hmeta">${escapeHtml(it.id)} · ${new Date(it.submittedAt).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'})}</div>
-        <div class="hmeta">${escapeHtml(it.nama || '')}</div>
-        <span class="hstatus">${escapeHtml(it.status || 'Diterima')}</span>
+    <div class="sub-card ${cls ? 'status-'+cls : ''}">
+      <div class="sub-head">
+        <div>
+          <h3>${escapeHtml(row['Nama'])}</h3>
+          <div class="meta">${escapeHtml(id)} · ${escapeHtml(formatDate(row['Waktu Kirim']))}</div>
+        </div>
+        <span class="badge ${cls}">${escapeHtml(currentStatus)}</span>
       </div>
-    `).join('');
-  }catch(err){
-    body.innerHTML = '<div class="empty-state">Gagal memuat riwayat.</div>';
+
+      <div class="sub-grid">
+        <div><b>NIP 18</b>${escapeHtml(row['NIP 18'])}</div>
+        <div><b>Unit Kerja</b>${escapeHtml(row['Unit Kerja'])}</div>
+        <div><b>Jabatan</b>${escapeHtml(row['Jabatan'])}</div>
+        <div><b>Golongan</b>${escapeHtml(row['Golongan Saat Ini'])}</div>
+        <div><b>Jenis Pengajuan</b>${escapeHtml(row['Jenis Pengajuan'])}</div>
+        <div><b>No HP</b>${escapeHtml(row['No HP'])}</div>
+        ${row['Pangkat Diusulkan'] ? `<div><b>Pangkat Diusulkan</b>${escapeHtml(row['Pangkat Diusulkan'])}</div>` : ''}
+        ${row['TMT KGB Terakhir'] ? `<div><b>TMT KGB Terakhir</b>${escapeHtml(row['TMT KGB Terakhir'])}</div>` : ''}
+        ${row['Diverifikasi Oleh'] ? `<div><b>Diverifikasi Oleh</b>${escapeHtml(row['Diverifikasi Oleh'])}</div>` : ''}
+        ${row['Waktu Verifikasi'] ? `<div><b>Waktu Verifikasi</b>${escapeHtml(formatDate(row['Waktu Verifikasi']))}</div>` : ''}
+      </div>
+
+      ${links.length ? `
+      <details class="sub-links">
+        <summary>Berkas terlampir (${links.length})</summary>
+        <div style="margin-top:8px; display:flex; flex-direction:column; gap:4px;">
+          ${links.map(l=>{
+            const idx = l.indexOf(':');
+            const label = idx>-1 ? l.slice(0,idx) : l;
+            const url = idx>-1 ? l.slice(idx+1).trim() : '';
+            return url.startsWith('http') ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(label)}</a>` : escapeHtml(l);
+          }).join('')}
+        </div>
+      </details>` : ''}
+
+      <div class="verify-row">
+        <div class="verify-field">
+          <label>Ubah Status</label>
+          <select id="status_${cid}">
+            ${STATUS_OPTIONS.map(s=>`<option value="${escapeHtml(s)}" ${s===currentStatus?'selected':''}>${escapeHtml(s)}</option>`).join('')}
+          </select>
+        </div>
+        <div class="verify-field grow">
+          <label>Catatan (opsional, akan dikirim ke email pegawai)</label>
+          <input type="text" id="catatan_${cid}" placeholder="cth. Berkas SK Pindah belum dilampirkan" value="${escapeHtml(row['Catatan Verifikasi']||'')}">
+        </div>
+        <div class="verify-field">
+          <label>Nama Verifikator</label>
+          <input type="text" id="verifier_${cid}" placeholder="Nama Anda" value="${escapeHtml(sessionStorage.getItem(NAME_KEY)||'')}">
+        </div>
+        <button class="btn-save" id="save_${cid}" type="button">Simpan</button>
+      </div>
+      <div class="save-hint" id="hint_${cid}"></div>
+    </div>
+  `;
+}
+
+function formatDate(iso){
+  if(!iso) return '-';
+  const d = new Date(iso);
+  if(isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}) + ' ' + d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+}
+
+/* ---------- save status ---------- */
+function saveStatus(id){
+  const cid = cssId(id);
+  const status = document.getElementById('status_'+cid).value;
+  const catatan = document.getElementById('catatan_'+cid).value.trim();
+  const verifiedBy = document.getElementById('verifier_'+cid).value.trim();
+  const btn = document.getElementById('save_'+cid);
+  const hint = document.getElementById('hint_'+cid);
+
+  if(verifiedBy) sessionStorage.setItem(NAME_KEY, verifiedBy);
+
+  btn.disabled = true; btn.textContent = 'Menyimpan…';
+  hint.style.display = 'none'; hint.classList.remove('err');
+
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    headers: {'Content-Type': 'text/plain;charset=utf-8'},
+    body: JSON.stringify({ action:'updateStatus', token:getToken(), id, status, catatan, verifiedBy }),
+  })
+    .then(r => r.json())
+    .then(json => {
+      btn.disabled = false; btn.textContent = 'Simpan';
+      if(json.ok){
+        hint.textContent = 'Tersimpan. Notifikasi email terkirim ke pegawai (bila alamat email tersedia).';
+        hint.style.display = 'block';
+        loadSubmissions();
+      } else {
+        hint.textContent = 'Gagal menyimpan: ' + (json.error || 'tidak diketahui');
+        hint.classList.add('err');
+        hint.style.display = 'block';
+      }
+    })
+    .catch(e => {
+      btn.disabled = false; btn.textContent = 'Simpan';
+      hint.textContent = 'Gagal terhubung ke server: ' + e;
+      hint.classList.add('err');
+      hint.style.display = 'block';
+    });
+}
+
+/* ---------- auto-login jika token tersimpan di sesi ini ---------- */
+(function init(){
+  const token = getToken();
+  if(token && APPS_SCRIPT_URL){
+    showMain();
+    loadSubmissions();
   }
-}
-function closeHistory(){
-  document.getElementById('drawerBackdrop').classList.remove('open');
-  document.getElementById('drawer').classList.remove('open');
-}
+})();
 </script>
 </body>
 </html>
