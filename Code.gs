@@ -33,7 +33,7 @@ const SHEET_NAME = 'Pengajuan';
 const FOLDER_NAME = 'Berkas Pengajuan Kepegawaian';
 const NOTIFY_EMAIL = 'asrabasirung074@gmail.com'; // <-- email tujuan notifikasi pengajuan baru
 const SECRET_TOKEN = ''; // opsional: proteksi tambahan untuk form pegawai (lihat form HTML)
-const ADMIN_TOKEN = 'GANTI-DENGAN-KODE-RAHASIA-ANDA'; // WAJIB DIGANTI — password panel verifikasi
+const ADMIN_TOKEN = 'saya admin'; // WAJIB DIGANTI — password panel verifikasi
 
 const HEADERS = [
   'Kode Referensi', 'Waktu Kirim', 'Nama', 'NIP 18', 'NIP 16', 'No HP', 'Email',
